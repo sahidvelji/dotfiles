@@ -4,5 +4,5 @@ bf	${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-files
 cfp	${XDG_CONFIG_HOME:-$HOME/.config}/shell/profile
 cfv	${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua
 cfz	${XDG_CONFIG_HOME:-$HOME/.config}/zsh/.zshrc
-hi	$HOME/.cache/zsh/history
+hi	${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history
 sshc	$HOME/.ssh/config
