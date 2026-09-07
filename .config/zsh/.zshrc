@@ -26,6 +26,20 @@ setopt HIST_VERIFY                 # Show expanded history before executing (!! 
 # Source aliases
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc"
 
+# Bookmark shortcuts. `generate-shortcuts` turns shell/bm-dirs and shell/bm-files
+# into shortcutrc (aliases: h, cac, dl, cfz...) and zshnameddirrc (~h, ~cac...).
+# Regenerated only when a bookmark file is newer than the output, so the usual
+# case costs two stat calls. The nvim BufWritePost hook also regenerates on save.
+_shell_dir="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
+if (( $+commands[generate-shortcuts] )) && [[ ! -s "$_shell_dir/shortcutrc" \
+    || "$_shell_dir/bm-dirs" -nt "$_shell_dir/shortcutrc" \
+    || "$_shell_dir/bm-files" -nt "$_shell_dir/shortcutrc" ]]; then
+    generate-shortcuts
+fi
+[ -f "$_shell_dir/shortcutrc" ] && source "$_shell_dir/shortcutrc"
+[ -f "$_shell_dir/zshnameddirrc" ] && source "$_shell_dir/zshnameddirrc"
+unset _shell_dir
+
 # Completions
 fpath=("${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions" $fpath)
 
