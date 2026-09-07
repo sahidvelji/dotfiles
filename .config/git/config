@@ -1,6 +1,8 @@
 [user]
 	email = sahidvelji@gmail.com
 	name = Sahid Velji
+	# Never guess identity from hostname/username; error out instead
+	useConfigOnly = true
 
 [pager]
 	# Use delta for syntax-highlighted, line-numbered diffs
