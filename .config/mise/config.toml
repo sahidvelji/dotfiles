@@ -15,6 +15,10 @@ default_mode = "symlink-each"
 # `~/.config` resolves source = ~/repos/dotfiles/.config.
 "~/.config" = {}
 "~/.local" = {}
+# symlink-each only links leaves that exist in the repo, so Claude Code's
+# runtime state under ~/.claude (projects/, sessions/, history.jsonl) is
+# left untouched.
+"~/.claude" = {}
 # ~/.zshenv is the zsh bootstrap: it sets ZDOTDIR + XDG so the rest of the
 # config loads from ~/.config/zsh. Managed here so `mise bootstrap` reproduces
 # it on a fresh machine.
