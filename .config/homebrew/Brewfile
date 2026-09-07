@@ -1,7 +1,5 @@
 tap "agavra/tap", trusted: true
 tap "dimentium/autoraise", trusted: true
-tap "homebrew/cask"
-tap "lindell/multi-gitter", trusted: true
 tap "raine/claude-history", trusted: true
 brew "shellcheck"
 brew "actionlint"
@@ -91,10 +89,6 @@ cask "ghostty"
 cask "hammerspoon"
 cask "keycastr"
 cask "meetingbar"
-cask "lindell/multi-gitter/multi-gitter"
 cask "obsidian"
-cask "postman"
 cask "rectangle"
-cask "shortcat"
 cask "slack"
-cask "visual-studio-code"
