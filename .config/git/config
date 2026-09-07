@@ -1,0 +1,83 @@
+[user]
+	email = REPLACE_WITH_YOUR_EMAIL
+	name = REPLACE_WITH_YOUR_NAME
+
+[pager]
+	# Use delta for syntax-highlighted, line-numbered diffs
+	diff = delta
+	log = delta
+	show = delta
+
+[diff]
+	# Produces more readable diffs than the default myers algorithm
+	algorithm = histogram
+	# Highlight moved code blocks in a different color instead of showing delete+add
+	colorMoved = default
+	# Still detect moved code even if indentation changed
+	colorMovedWS = allow-indentation-change
+
+[merge]
+	# Show the original (ancestor) text alongside ours/theirs in conflict markers
+	conflictStyle = zdiff3
+
+[rebase]
+	# Stash uncommitted changes before rebase, restore them after
+	autoStash = true
+	# Auto-squash commits prefixed with fixup!/squash! during interactive rebase
+	autoSquash = true
+	# Update stacked branch pointers when rebasing through them
+	updateRefs = true
+
+[rerere]
+	# Remember how merge conflicts were resolved and reuse the resolution
+	enabled = true
+
+[pull]
+	# Automatically rebase local commits on top of remote changes
+	rebase = true
+
+[push]
+	# Automatically set upstream tracking on first push of a new branch
+	autoSetupRemote = true
+	# Push the current branch to a same-named branch on the remote
+	default = current
+
+[fetch]
+	# Remove local references to remote branches that have been deleted
+	prune = true
+
+[help]
+	# Prompt to run the suggested correction when a command is misspelled
+	autocorrect = prompt
+
+[init]
+	# Name for the initial branch when creating a new repository
+	defaultBranch = main
+
+[merge "ours"]
+	# Keep our version of a file and discard incoming changes during merges
+	# Requires a .gitattributes entry (e.g. "path/to/file merge=ours") to take effect
+	driver = true
+
+[credential]
+	# Clear system-level credential helpers (e.g. osxkeychain from Homebrew)
+	# so only the per-host helpers below are used
+	helper = ""
+
+[credential "https://github.com"]
+	helper = !gh auth git-credential
+
+[core]
+	# Cache untracked file state between runs to speed up repeated status checks
+	untrackedCache = true
+
+[branch]
+	# List branches by most recently committed, not alphabetical
+	sort = -committerdate
+
+[column]
+	# Display branch/tag lists in columns when the terminal is wide enough
+	ui = auto
+
+[delta]
+	line-numbers = true

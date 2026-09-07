@@ -1,0 +1,72 @@
+[settings]
+# Required for `mise dotfiles` (still gated upstream).
+experimental = true
+
+[settings.dotfiles]
+root = "~/repos/dotfiles"
+# Matches stow's --no-folding: walk each source dir recursively and symlink
+# every leaf file. `symlink` (the default) would replace the whole target dir
+# with a single symlink — wrong for ~/.config, ~/.local where unmanaged peers
+# live alongside managed entries.
+default_mode = "symlink-each"
+
+[dotfiles]
+# Sources are implied from the home-relative target under dotfiles.root, so
+# `~/.config` resolves source = ~/repos/dotfiles/.config.
+"~/.config" = {}
+"~/.local" = {}
+# ~/.zshenv is the zsh bootstrap: it sets ZDOTDIR + XDG so the rest of the
+# config loads from ~/.config/zsh. Managed here so `mise bootstrap` reproduces
+# it on a fresh machine.
+"~/.zshenv" = { mode = "symlink" }
+
+[bootstrap.user]
+# Declarative login shell — `mise bootstrap` runs `chsh -s` only if it differs.
+login_shell = "/bin/zsh"
+
+[bootstrap.macos.dock]
+orientation = "left"
+tilesize = 20
+mru_spaces = false      # fixed Space order — keeps Ctrl+1/2/3 stable
+
+[bootstrap.macos.finder]
+show_all_files = true
+preferred_view_style = "list"
+
+[bootstrap.macos.keyboard]
+key_repeat = 2          # fastest repeat once held
+
+[bootstrap.macos.trackpad]
+tap_to_click = true
+
+[bootstrap.macos.defaults."com.apple.dock"]
+launchanim = false                    # no bounce on app launch
+"minimize-to-application" = true      # minimized windows tuck into app icon
+
+[bootstrap.macos.defaults.NSGlobalDomain]
+AppleShowAllExtensions = true                 # Finder shows every extension
+AppleInterfaceStyle = "Dark"                  # force dark mode
+AppleShowScrollBars = "Always"                # scrollbars always visible
+AppleKeyboardUIMode = 2                       # Tab navigates all dialog controls
+"com.apple.swipescrolldirection" = false      # natural scrolling off
+NSAutomaticCapitalizationEnabled = false      # no auto-cap mid-sentence
+NSAutomaticPeriodSubstitutionEnabled = false  # no double-space-to-period
+
+[bootstrap.macos.defaults."com.apple.AppleMultitouchTrackpad"]
+TrackpadRightClick = true                     # two-finger right-click
+
+[bootstrap.macos.defaults."com.apple.driver.AppleBluetoothMultitouch.trackpad"]
+TrackpadRightClick = true                     # same, for Bluetooth trackpad
+
+[bootstrap.macos.defaults."com.apple.finder"]
+NewWindowTarget = "PfAF"                      # new Finder windows open at Recents
+
+[task_config]
+dir = "{{cwd}}"
+
+[tools]
+"github:open-feature/cli" = "latest"
+"github:seachicken/gh-poi" = { version = "latest", bin = "gh-poi" }
+"go:golang.org/x/tools/cmd/deadcode" = "latest"
+"go:golang.org/x/vuln/cmd/govulncheck" = "latest"
+node = "24"

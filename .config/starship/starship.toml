@@ -1,0 +1,139 @@
+# Starship Prompt Configuration
+# https://starship.rs/config/
+
+# Two-line prompt: info on top, prompt character below
+format = """
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$git_metrics\
+$docker_context\
+$package\
+$golang\
+$nodejs\
+$python\
+$rust\
+$java\
+$terraform\
+$aws\
+$jobs\
+$status\
+$line_break\
+$character"""
+
+right_format = """$cmd_duration$time"""
+
+add_newline = false
+
+# --- Core Prompt ---
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[✖](bold red)"
+vimcmd_symbol = "[❮](bold green)"
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+truncation_symbol = "…/"
+style = "bold cyan"
+repo_root_style = "bold blue"
+repo_root_format = "[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+before_repo_root_style = "dimmed cyan"
+
+# --- Git ---
+
+[git_branch]
+format = "on [$symbol$branch(:$remote_branch)]($style) "
+symbol = " "
+style = "bold purple"
+truncation_length = 30
+truncation_symbol = "…"
+
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "bold red"
+
+[git_metrics]
+disabled = false
+added_style = "bold green"
+deleted_style = "bold red"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+
+[git_commit]
+commit_hash_length = 7
+only_detached = true
+tag_disabled = false
+tag_symbol = " "
+
+# --- Languages & Tools ---
+
+[golang]
+format = 'via [$symbol($version )($mod_version )]($style)'
+
+[nodejs]
+format = "via [$symbol($version )]($style)"
+symbol = " "
+
+[python]
+format = 'via [${symbol}(${version} )(\($virtualenv\) )]($style)'
+symbol = " "
+pyenv_prefix = ""
+
+[rust]
+format = "via [$symbol($version )]($style)"
+symbol = " "
+
+[java]
+format = "via [$symbol($version )]($style)"
+symbol = " "
+
+[package]
+format = "is [$symbol$version]($style) "
+symbol = " "
+
+[terraform]
+format = "via [$symbol$workspace]($style) "
+
+# --- Infrastructure ---
+
+[docker_context]
+format = "via [$symbol$context]($style) "
+symbol = " "
+
+[aws]
+format = 'on [$symbol($profile )(\($region\) )]($style)'
+symbol = " "
+style = "bold yellow"
+
+# --- Utility ---
+
+[cmd_duration]
+min_time = 1_000
+format = "[$duration]($style) "
+style = "bold yellow"
+
+[time]
+disabled = false
+format = "[$time]($style)"
+style = "dimmed white"
+time_format = "%H:%M"
+
+[status]
+disabled = false
+format = "[$symbol$status]($style) "
+symbol = ""
+map_symbol = true
+not_executable_symbol = " "
+not_found_symbol = " "
+sigint_symbol = " "
+signal_symbol = " "
+style = "bold red"
+
+[jobs]
+symbol = " "
+number_threshold = 2

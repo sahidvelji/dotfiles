@@ -1,0 +1,20 @@
+theme = Ultra Dark
+cursor-style-blink = false
+copy-on-select = clipboard
+
+keybind = alt+d=scroll_page_fractional:0.5
+keybind = alt+u=scroll_page_fractional:-0.5
+
+keybind = alt+j=scroll_page_lines:1
+keybind = alt+k=scroll_page_lines:-1
+
+# --- Shell Integration -------------------------------------------------------
+
+# Auto-detect shell and inject integration.
+# Enables: working directory inheritance, prompt marking, smart close, better resize.
+shell-integration = detect
+
+# cursor: beam cursor at prompt (complements zsh vi-mode).
+# sudo: preserves Ghostty integration in elevated shells.
+# title: sets terminal title from shell context.
+shell-integration-features = cursor,sudo,title

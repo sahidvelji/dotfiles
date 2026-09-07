@@ -1,0 +1,33 @@
+---
+gui:
+  nerdFontsVersion: "3"
+  showNumstatInFilesView: true
+  showDivergenceFromBaseBranch: arrowAndNumber
+  filterMode: fuzzy
+git:
+  commit:
+    signOff: true
+  autoForwardBranches: allBranches
+  parseEmoji: true
+  truncateCopiedCommitHashesTo: 40
+  log:
+    order: date-order
+    showGraph: always
+  diffRenderers:
+    - command: delta --dark --paging=never --hyperlinks
+notARepository: skip
+customCommands:
+  - key: 'g'
+    context: 'files'
+    description: 'AI commit message via claude -p'
+    command: >
+      ( git log --oneline -20; echo '---'; git diff --cached ) |
+      claude -p
+      --model haiku
+      --tools ""
+      --no-session-persistence
+      --disable-slash-commands
+      "The input contains recent commit messages, then a '---' separator, then the staged diff. Write a conventional commit message (format: type(scope): short description) for the diff. Match the style of the recent commits. Output ONLY the commit message — no preamble, no code fences, no quotes."
+      | git commit -F -
+    loadingText: 'Asking claude for commit message...'
+    output: popup

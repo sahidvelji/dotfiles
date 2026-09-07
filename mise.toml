@@ -1,0 +1,10 @@
+[settings.task]
+output = "interleave"
+
+[tasks.brew-dump]
+description = "Update Brewfile with current brew packages"
+run = 'brew bundle dump --global --force --no-describe'
+
+[tasks.brew-install]
+description = "Install brew packages from Brewfile"
+run = 'brew bundle --global'

@@ -1,0 +1,2 @@
+# linguist-generated is GitHub-only (excludes from language stats and collapses in PR diffs)
+go.sum linguist-generated=true merge=union

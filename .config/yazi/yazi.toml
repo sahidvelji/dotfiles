@@ -1,0 +1,19 @@
+[mgr]
+show_hidden = true
+sort_by = "natural"
+linemode = "size"
+scrolloff = 8
+
+[preview]
+wrap = "yes"
+tab_size = 4
+
+[opener]
+pdf = [
+	{ run = 'tdf "$@"', block = true, desc = "Open in tdf", for = "unix" },
+]
+
+[open]
+prepend_rules = [
+	{ mime = "application/pdf", use = "pdf" },
+]

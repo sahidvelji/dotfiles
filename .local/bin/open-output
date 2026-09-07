@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# open-output: Opens the compiled output of a source file
+#
+# Usage: open-output <file>
+#
+# Dependencies: open (macOS), shell builtins
+
+# Input validation
+if [ -z "$1" ]; then
+	echo "Error: No input file provided" >&2
+	echo "Usage: open-output <file>" >&2
+	exit 1
+fi
+
+input_file="$1"
+basename="${input_file%.*}"
+
+# Determine output file and open it
+case "$input_file" in
+	*.tex|*.m[dse]|*.[rR]md|*.mom|*.[0-9])
+		output_file="$basename.pdf"
+		if [ -f "$output_file" ]; then
+			open "$output_file"
+		else
+			echo "Error: Output file not found: $output_file" >&2
+			exit 1
+		fi
+		;;
+	*.html)
+		if [ -f "$input_file" ]; then
+			open "$input_file"
+		else
+			echo "Error: Output file not found: $input_file" >&2
+			exit 1
+		fi
+		;;
+	*.sent)
+		if [ -f "$input_file" ]; then
+			open "$input_file"
+		else
+			echo "Error: Output file not found: $input_file" >&2
+			exit 1
+		fi
+		;;
+	*)
+		echo "Error: Unsupported file type: $input_file" >&2
+		exit 1
+		;;
+esac

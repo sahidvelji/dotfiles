@@ -1,0 +1,13 @@
+[mgr]
+prepend_keymap = [
+  # Tool integrations
+  { on = [ "g", "i" ], run = "shell 'lazygit' --block --confirm", desc = "Open lazygit" },
+  { on = [ "g", "s" ], run = "shell '$SHELL' --block --confirm",  desc = "Open shell" },
+
+  # Goto shortcuts
+  { on = [ "g", "r" ], run = "cd ~/repos",           desc = "Go ~/repos" },
+  { on = [ "g", "." ], run = "cd ~/repos/dotfiles",  desc = "Go dotfiles" },
+  { on = [ "g", "n" ], run = "cd ~/.config/nvim",    desc = "Go nvim config" },
+  { on = [ "g", "D" ], run = "cd ~/Documents",       desc = "Go ~/Documents" },
+  { on = [ "g", "t" ], run = "cd /tmp",               desc = "Go /tmp" },
+]

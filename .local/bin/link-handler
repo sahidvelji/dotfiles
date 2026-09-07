@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Handle URLs and files on macOS
+# Automatically routes content to appropriate applications:
+# - Videos/streams: mpv or QuickTime
+# - Images: default image viewer
+# - PDFs/ebooks: default PDF viewer
+# - Audio: download for later playback
+# - Local files: open in $EDITOR
+# - URLs: open in default browser
+#
+# Dependencies: curl, mpv (optional), $EDITOR, $BROWSER
+
+# Helper function to extract and decode filename from URL
+url_filename() {
+	basename "$1" | sed 's/%20/ /g'
+}
+
+# If no argument given, open browser (for use as $BROWSER)
+[ -z "$1" ] && { "$BROWSER"; exit; }
+
+case "$1" in
+	*mkv|*webm|*mp4|*youtube.com/watch*|*youtube.com/playlist*|*youtu.be*|*hooktube.com*|*bitchute.com*|*videos.lukesmith.xyz*)
+		mpv --quiet "$1" & ;;
+	*png|*jpg|*jpe|*jpeg|*gif)
+		filename="/tmp/$(url_filename "$1")"
+		curl -sL "$1" > "$filename" && open "$filename" & ;;
+	*pdf|*cbz|*cbr)
+		filename="/tmp/$(url_filename "$1")"
+		curl -sL "$1" > "$filename" && open "$filename" & ;;
+	*mp3|*flac|*opus|*mp3?source*)
+		qndl "$1" 'curl -LO' >/dev/null 2>&1 ;;
+	*)
+		[ -f "$1" ] && "$EDITOR" "$1" || open "$1"
+esac

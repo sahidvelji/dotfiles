@@ -1,0 +1,77 @@
+#!/bin/sh
+
+# General-purpose archive extraction script.
+#
+# Usage: extract [-c] <archive>
+#
+# Options:
+#   -c    Extract archive into current directory (default: creates new directory)
+#
+# Supported formats: tar.bz2, tar.xz, tar.gz, tar.zst, tar, zip, 7z, rar, gz, bz2, xz, Z, lzma, exe
+# Dependencies: tar, gzip, bzip2, unzip, 7z (and other format-specific tools as needed)
+
+extracthere=0
+
+while getopts "c" o; do case "${o}" in
+	c) extracthere=1 ;;
+	*) printf "Usage: extract [-c] <archive>\\n" && exit 1 ;;
+esac done
+
+shift $((OPTIND - 1))
+
+# Handle archive path portably without readlink
+if [ $# -eq 0 ]; then
+	printf "Give archive to extract as argument.\\n" && exit 1
+fi
+
+archive="$1"
+
+# Resolve to absolute path portably
+if [ -n "$archive" ]; then
+	if [ -d "$archive" ]; then
+		archive="$(cd "$archive" && pwd -P)"
+	else
+		archive="$(cd "$(dirname "$archive")" && pwd -P)/$(basename "$archive")" 2>/dev/null || archive="$1"
+	fi
+fi
+
+# Check if file exists and is readable
+if [ ! -r "$archive" ]; then
+	printf "File \"%s\" not found or not readable.\\n" "$archive"
+	exit 1
+fi
+
+# Extract to new directory if not using -c flag
+if [ $extracthere -eq 0 ]; then
+	# Handle double extensions like .tar.gz, .tar.bz2, .tar.xz, .tar.zst
+	case "$archive" in
+		*.tar.bz2|*.tar.gz|*.tar.xz|*.tar.zst)
+			directory="${archive%.tar.*}"
+			;;
+		*)
+			directory="${archive%.*}"
+			;;
+	esac
+
+	mkdir -p "$directory" || exit 1
+	cd "$directory" || exit 1
+fi
+
+# Extract based on file type
+case "$archive" in
+	*.tar.bz2|*.tbz2) tar xvjf "$archive" ;;
+	*.tar.xz) tar -xf "$archive" ;;
+	*.tar.gz|*.tgz) tar xvzf "$archive" ;;
+	*.tar.zst) tar -I zstd -xf "$archive" ;;
+	*.lzma) unlzma "$archive" ;;
+	*.bz2) bunzip2 "$archive" ;;
+	*.rar) unrar x -ad "$archive" ;;
+	*.gz) gunzip "$archive" ;;
+	*.tar) tar xvf "$archive" ;;
+	*.zip) unzip "$archive" ;;
+	*.Z) uncompress "$archive" ;;
+	*.7z) 7z x "$archive" ;;
+	*.xz) unxz "$archive" ;;
+	*.exe) cabextract "$archive" ;;
+	*) printf "extract: '%s' - unknown archive method\\n" "$archive" ;;
+esac

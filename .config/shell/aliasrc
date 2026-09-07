@@ -1,0 +1,99 @@
+#!/bin/zsh
+# vim: ft=sh
+
+# Color Defaults
+alias \
+  ls="eza --git --git-repos" \
+  grep="grep --color=auto"
+
+# ls Shorthand
+alias \
+  ll="ls --all --long" \
+  l="ls --all"
+
+# Safety Defaults
+alias \
+  df="df -h" \
+  cp="cp -iv" \
+  mv="mv -iv" \
+  rmd="rmdir -v" \
+  rm="rm -vI" \
+  mkd="mkdir -pv"
+
+# General Shortcuts
+alias \
+  bc="bc -ql" \
+  ..="cd .. && ll" \
+  j="jobs" \
+  e="exit" \
+  ka="killall" \
+  ff="fastfetch" \
+  m="mise" \
+  mr="mise run" \
+  sudo="sudo " \
+  py="python3" \
+  space="du -hd 1 . | sort -h" \
+  v="$EDITOR"
+
+# gh Aliases
+alias \
+  ghw="gh repo view -w" \
+  ghcr="gh repo create" \
+  ghic="gh issue create" \
+  ghpc="gh pr create"
+
+# git Aliases
+alias \
+  g="git" \
+  gl="g log" \
+  gp="g push" \
+  gs="g status" \
+  gd="g diff" \
+  gu="g pull" \
+  gcom="g add -A && g status && g commit -am" \
+  gr="g restore :/ && gs" \
+  grs="g restore --staged :/ && gs" \
+  ga="g add -A"
+
+# Tool Aliases
+alias b="bat"
+alias lg="lazygit"
+
+# Functions
+
+# Yazi cd-on-exit: q quits and cds to last dir, Q quits without cd
+f() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
+
+cpf() { cp "$@" && cd "$_" && ll; }
+mvf() { mv "$@" && cd "$_" && ll; }
+
+ghc() {
+  local url="${1:-$(pbpaste)}"
+  local repo_name
+  # GitHub URLs are always github.com/owner/repo/... — grab the repo segment
+  repo_name="$(echo "$url" | sed 's|.*github\.com[:/][^/]*/||; s|/.*||')"
+  gh repo clone "$url" "$HOME/repos/$repo_name" -- "${@:2}" &&
+    cd "$HOME/repos/$repo_name"
+}
+
+se() {
+  local script
+  script="$(fd --max-depth 1 --type file --type symlink --base-directory ~/.local/bin | fzf --preview 'bat --color=always ~/.local/bin/{}')"
+  [ -n "$script" ] && $EDITOR "$HOME/.local/bin/$script"
+}
+
+s() {
+  local dir
+  local base_path="$HOME/repos"
+  dir=$(fd --max-depth 1 --type d --hidden --base-directory "$base_path" | fzf --ansi \
+    --header 'ctrl-o: open in browser | enter: cd into repo' \
+    --bind 'ctrl-o:execute-silent(cd '"$base_path"'/{} && gh repo view --web)+abort') &&
+    cd "$base_path/$dir" && ll && gs
+}

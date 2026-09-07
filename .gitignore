@@ -1,0 +1,6 @@
+# macOS Finder metadata
+.DS_Store
+
+# Personal, machine-local tool config — never committed
+mise.local.toml
+mise.*.local.toml
