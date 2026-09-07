@@ -30,6 +30,7 @@ export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
 export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 export INPUTRC="$XDG_CONFIG_HOME/shell/inputrc"
 export NVM_DIR="$XDG_DATA_HOME/nvm"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
@@ -39,6 +40,8 @@ export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
+# Stops /etc/zshrc_Apple_Terminal (Terminal.app only) recreating ~/.zsh_sessions.
+export SHELL_SESSIONS_DISABLE=1
 
 # Tool options that non-interactive tools may also read.
 export CLICOLOR=
