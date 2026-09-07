@@ -1,6 +1,6 @@
-tap "agavra/tap", trusted: true
-tap "dimentium/autoraise", trusted: true
-tap "raine/claude-history", trusted: true
+tap "agavra/tap"
+tap "dimentium/autoraise"
+tap "raine/claude-history"
 brew "shellcheck"
 brew "actionlint"
 brew "node"
@@ -86,7 +86,7 @@ brew "zsh-autosuggestions"
 brew "zsh-completions"
 brew "zsh-history-substring-search"
 brew "zsh-syntax-highlighting"
-brew "raine/claude-history/claude-history"
+brew "raine/claude-history/claude-history", trusted: true
 cask "bitwarden"
 cask "claude"
 cask "claude-code"

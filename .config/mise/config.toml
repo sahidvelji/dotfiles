@@ -73,4 +73,3 @@ dir = "{{cwd}}"
 "github:seachicken/gh-poi" = { version = "latest", bin = "gh-poi" }
 "go:golang.org/x/tools/cmd/deadcode" = "latest"
 "go:golang.org/x/vuln/cmd/govulncheck" = "latest"
-node = "24"
