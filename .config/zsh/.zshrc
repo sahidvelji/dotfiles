@@ -15,11 +15,16 @@ unsetopt NOMATCH                   # Pass unmatched globs through (like bash)
 # History
 HISTSIZE=10000000
 SAVEHIST=10000000
-HISTFILE=~/.cache/zsh/history
+# State, not cache: history cannot be regenerated, and ~/.cache/zsh otherwise
+# holds only throwaway init caches and zcompdump.
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+[[ -d "${HISTFILE:h}" ]] || mkdir -p "${HISTFILE:h}"
 setopt HIST_IGNORE_DUPS
 setopt HIST_FIND_NO_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST  # Trim duplicates first when history is full
 setopt SHARE_HISTORY           # Share history across concurrent sessions
+setopt EXTENDED_HISTORY        # Timestamp + duration; SHARE_HISTORY alone does not write these
+setopt HIST_FCNTL_LOCK         # fcntl locking, safer with concurrent SHARE_HISTORY writers
 setopt HIST_REDUCE_BLANKS          # Remove extra blanks from commands
 setopt HIST_VERIFY                 # Show expanded history before executing (!! safety)
 
