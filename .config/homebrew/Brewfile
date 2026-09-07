@@ -1,5 +1,3 @@
-tap "agavra/tap"
-tap "dimentium/autoraise"
 tap "raine/claude-history"
 brew "shellcheck"
 brew "actionlint"
