@@ -17,10 +17,6 @@
 - When pushing new commits to a branch with an open PR,
   check whether the PR body still describes the changes accurately.
   Update it only if the new commits materially change what the PR does.
-- Never put a `claude.ai/code/session_...` link in a PR body or a commit message.
-  This includes the `Claude-Session:` commit trailer
-  and the session URL in the generated-with footer —
-  drop those lines entirely.
 
 ## Commit Conventions
 
