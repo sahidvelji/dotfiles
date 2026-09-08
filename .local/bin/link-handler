@@ -9,7 +9,7 @@
 # - Local files: open in $EDITOR
 # - URLs: open in default browser
 #
-# Dependencies: curl, mpv (optional), $EDITOR, $BROWSER
+# Dependencies: curl, open; mpv optional (falls back to `open`)
 
 # Helper function to extract and decode filename from URL
 url_filename() {
@@ -20,16 +20,23 @@ url_filename() {
 [ -z "$1" ] && { "$BROWSER"; exit; }
 
 case "$1" in
-	*mkv|*webm|*mp4|*youtube.com/watch*|*youtube.com/playlist*|*youtu.be*|*hooktube.com*|*bitchute.com*|*videos.lukesmith.xyz*)
-		mpv --quiet "$1" & ;;
-	*png|*jpg|*jpe|*jpeg|*gif)
+	*mkv|*webm|*mp4|*youtube.com/watch*|*youtube.com/playlist*|*youtu.be*)
+		# mpv is optional; hand off to the system player when it is absent.
+		if command -v mpv >/dev/null 2>&1; then
+			mpv --quiet "$1" &
+		else
+			open "$1"
+		fi ;;
+	*png|*jpg|*jpe|*jpeg|*gif|*pdf|*cbz|*cbr)
 		filename="/tmp/$(url_filename "$1")"
-		curl -sL "$1" > "$filename" && open "$filename" & ;;
-	*pdf|*cbz|*cbr)
-		filename="/tmp/$(url_filename "$1")"
-		curl -sL "$1" > "$filename" && open "$filename" & ;;
+		curl --silent --location "$1" > "$filename" && open "$filename" & ;;
 	*mp3|*flac|*opus|*mp3?source*)
-		qndl "$1" 'curl -LO' >/dev/null 2>&1 ;;
+		# Download for later playback, into ~/Downloads rather than the cwd.
+		curl --silent --location --remote-name --output-dir "$HOME/Downloads" "$1" ;;
 	*)
-		[ -f "$1" ] && "$EDITOR" "$1" || open "$1"
+		if [ -f "$1" ]; then
+			"$EDITOR" "$1"
+		else
+			open "$1"
+		fi ;;
 esac

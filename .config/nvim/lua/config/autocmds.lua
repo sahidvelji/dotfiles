@@ -15,11 +15,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "subs.csv",
-  command = "2,$sort u | !gen-subs",
-})
-
-vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = { "bm-files", "bm-dirs" },
   command = "sort u",
 })
