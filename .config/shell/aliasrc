@@ -57,6 +57,7 @@ alias \
 
 # Tool Aliases
 alias b="bat"
+alias c="claude"
 alias lg="lazygit"
 
 # Functions
