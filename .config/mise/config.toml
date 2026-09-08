@@ -1,7 +1,3 @@
-[settings]
-# Required for `mise dotfiles` (still gated upstream).
-experimental = true
-
 [settings.dotfiles]
 root = "~/repos/dotfiles"
 # Matches stow's --no-folding: walk each source dir recursively and symlink
