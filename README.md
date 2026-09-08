@@ -98,8 +98,11 @@ because those paths have no source in the repo.
 
 - `.claude/CLAUDE.md` — global instructions that apply in every project
   (PR and commit conventions, task-runner preferences, markdown style)
+- `.claude/settings.json` — model, permission mode, editor mode, status line
+- `.claude/statusline-command.sh` — the status line renderer
+  that `settings.json` points at
 
-Editing `.claude/CLAUDE.md` here takes effect in the next session,
-since `~/.claude/CLAUDE.md` is a symlink to it.
+Editing any of these takes effect in the next session,
+since their `~/.claude` counterparts are symlinks.
 Adding a new file under `.claude/`
 needs `mise bootstrap dotfiles apply` before Claude Code will see it.
