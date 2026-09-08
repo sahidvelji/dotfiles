@@ -24,13 +24,30 @@
 
 ## Commit Conventions
 
-Conventional commits, using only these types:
-`feat`, `fix`, `docs`, `chore`, `test`, `refactor`.
+Conventional commits.
 
 - **Commit messages**: `type(scope): description`
 - **PR titles**: `type(scope): description`
 - **Branch names**: `type/short-description`
 - **Issue titles**: plain descriptive titles (no conventional commit format)
+
+Use whichever of the standard types fits the change:
+
+| Type | Use for |
+| --- | --- |
+| `feat` | a new feature |
+| `fix` | a bug fix |
+| `docs` | documentation only |
+| `style` | formatting with no change in behaviour |
+| `refactor` | a change that neither fixes a bug nor adds a feature |
+| `perf` | a change that improves performance |
+| `test` | adding or correcting tests |
+| `build` | the build system or dependencies |
+| `ci` | CI configuration and scripts |
+| `chore` | anything else that touches no source or test files |
+| `revert` | reverting an earlier commit |
+
+Add `!` before the colon to flag a breaking change (`feat(api)!: ...`).
 
 ## Task Runners
 
