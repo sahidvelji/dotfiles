@@ -5,7 +5,8 @@
   "model": "opus",
   "statusLine": {
     "type": "command",
-    "command": "sh \"$HOME/.claude/statusline-command.sh\""
+    "command": "sh \"$HOME/.claude/statusline-command.sh\"",
+    "refreshInterval": 10
   },
   "voice": {
     "enabled": true,
@@ -16,5 +17,12 @@
   "autoCompactEnabled": true,
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
+  "attribution": {
+    "sessionUrl": false
+  },
+  "fallbackModel": [
+    "sonnet"
+  ],
+  "autoContinueAtUsageLimit": true,
   "voiceEnabled": true
 }
