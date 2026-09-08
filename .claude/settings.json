@@ -5,7 +5,7 @@
   "model": "opus",
   "statusLine": {
     "type": "command",
-    "command": "sh /Users/sahid/.claude/statusline-command.sh"
+    "command": "sh \"$HOME/.claude/statusline-command.sh\""
   },
   "voice": {
     "enabled": true,
