@@ -17,6 +17,7 @@
 - When pushing new commits to a branch with an open PR,
   check whether the PR body still describes the changes accurately.
   Update it only if the new commits materially change what the PR does.
+- Disclose AI-written PR prose per [AI Disclosure](#ai-disclosure).
 
 ## Commit Conventions
 
@@ -44,6 +45,28 @@ Use whichever of the standard types fits the change:
 | `revert` | reverting an earlier commit |
 
 Add `!` before the colon to flag a breaking change (`feat(api)!: ...`).
+
+## AI Disclosure
+
+When AI contributes GitHub prose —
+PR descriptions, reviews, comments, discussion posts —
+append this as the last line:
+
+`*AI-assisted — Tool: <tool>; model: <provider>/<model>; version: <version>.*`
+
+- **Tool** — harness name: `Claude Code`, `Codex`.
+- **Model** — what the harness reports for the session,
+  verbatim after the provider prefix (`anthropic/claude-5-opus[1m]`) —
+  never tidied into a canonical API id.
+- **Version** — the harness's `--version`, leading field only
+  (`claude --version` → `2.1.195 (Claude Code)` → `2.1.195`).
+
+Run the version command rather than recalling it,
+and write `unavailable` only if that actually fails.
+
+Never hand-write a `Co-Authored-By:` trailer —
+in a commit the harness adds it,
+and in GitHub prose the disclosure line replaces it.
 
 ## Task Runners
 
