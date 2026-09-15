@@ -1,0 +1,7 @@
+https://go.dev/blog/feed.atom go "~The Go Blog"
+https://neovim.io/news.xml tools "~Neovim"
+https://karpathy.github.io/feed.xml blogs "~Andrej Karpathy"
+https://opentelemetry.io/blog/index.xml tools "~OpenTelemetry"
+https://openfeature.dev/blog/rss.xml tools "~OpenFeature"
+https://jdx.dev/posts/index.xml tools "~jdx"
+https://karpathy.bearblog.dev/feed/ blogs "~Andrej Karpathy (bearblog)"
