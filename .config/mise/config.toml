@@ -24,10 +24,25 @@ default_mode = "symlink-each"
 # Declarative login shell — `mise bootstrap` runs `chsh -s` only if it differs.
 login_shell = "/bin/zsh"
 
+# macOS preferences — only values that differ from stock macOS are declared.
+
 [bootstrap.macos.dock]
 orientation = "left"
 tilesize = 20
 mru_spaces = false      # fixed Space order — keeps Ctrl+1/2/3 stable
+# Pinned apps, in order — mise owns `persistent-apps`. Every path must exist
+# before a changed layout applies, so install the casks first.
+apps = [
+  "/System/Applications/Apps.app",
+  "/System/Applications/Photos.app",
+  "/System/Applications/App Store.app",
+  "/System/Applications/System Settings.app",
+  "/Applications/Google Chrome.app",
+  "/Applications/Slack.app",
+  "/Applications/Ghostty.app",
+  "/Applications/Claude.app",
+  "/Applications/Discord.app",
+]
 
 [bootstrap.macos.finder]
 show_all_files = true
@@ -42,6 +57,8 @@ tap_to_click = true
 [bootstrap.macos.defaults."com.apple.dock"]
 launchanim = false                    # no bounce on app launch
 "minimize-to-application" = true      # minimized windows tuck into app icon
+"wvous-br-corner" = 0                 # bottom-right ships as Quick Note; 0 = no-op
+"wvous-br-modifier" = 0               # no modifier held
 
 [bootstrap.macos.defaults.NSGlobalDomain]
 AppleShowAllExtensions = true                 # Finder shows every extension
@@ -51,15 +68,34 @@ AppleKeyboardUIMode = 2                       # Tab navigates all dialog control
 "com.apple.swipescrolldirection" = false      # natural scrolling off
 NSAutomaticCapitalizationEnabled = false      # no auto-cap mid-sentence
 NSAutomaticPeriodSubstitutionEnabled = false  # no double-space-to-period
+AppleICUForce24HourTime = true                # 24-hour clock everywhere
+# Raw + float: the friendly `initial_key_repeat` accepts integers only.
+InitialKeyRepeat = 25.0                       # delay before a held key repeats
 
-[bootstrap.macos.defaults."com.apple.AppleMultitouchTrackpad"]
-TrackpadRightClick = true                     # two-finger right-click
+[bootstrap.macos.defaults."com.apple.menuextra.clock"]
+ShowSeconds = true      # stock macOS hides seconds
 
-[bootstrap.macos.defaults."com.apple.driver.AppleBluetoothMultitouch.trackpad"]
-TrackpadRightClick = true                     # same, for Bluetooth trackpad
+# Rectangle (cask). App preferences belong here, not as a symlinked plist —
+# cfprefsd caches those.
+[bootstrap.macos.defaults."com.knollsoft.Rectangle"]
+launchOnLogin = true
+allowAnyShortcut = true         # allow bindings Rectangle would otherwise reject
+subsequentExecutionMode = 0     # what repeating a shortcut does
+SUEnableAutomaticChecks = false # no Sparkle auto-update checks
+toggleTodo = { keyCode = 11, modifierFlags = 786432 }   # ⌃⌥B
+reflowTodo = { keyCode = 45, modifierFlags = 786432 }   # ⌃⌥N
 
-[bootstrap.macos.defaults."com.apple.finder"]
-NewWindowTarget = "PfAF"                      # new Finder windows open at Recents
+# `-currentHost` preference: stored per machine, so it is invisible to the
+# plain domains above and needs the explicit-entry form.
+[[bootstrap.macos.defaults_entries]]
+domain = "NSGlobalDomain"
+key = "com.apple.mouse.tapBehavior"
+host = "current"
+value = 1               # system-wide tap-to-click ("mouse" is legacy naming)
+
+# Dock re-reads these only on relaunch, and mise never kills apps itself.
+[bootstrap.hooks.post-defaults]
+run = "killall Dock || true"
 
 [task_config]
 dir = "{{cwd}}"
