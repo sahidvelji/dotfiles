@@ -98,3 +98,29 @@ s() {
     --bind 'ctrl-o:execute-silent(cd '"$base_path"'/{} && gh repo view --web)+abort') &&
     cd "$base_path/$dir" && ll && gs
 }
+
+# Check out a pull request and hand it to Claude for review. Takes anything
+# `gh pr view` accepts (URL, number inside a repo); falls back to the clipboard.
+review-pr() {
+  local input="${1:-$(pbpaste)}"
+  [ -n "$input" ] || { print -u2 "review-pr: no PR given and the clipboard is empty"; return 1; }
+
+  # gh resolves any accepted form to the base repo's canonical URL, so a
+  # cross-fork PR still resolves to the upstream owner/repo.
+  local canonical
+  canonical="$(gh pr view "$input" --json url --jq .url)" || return
+
+  local owner_repo="${${canonical#https://github.com/}%/pull/*}"
+  local number="${canonical##*/}"
+  local dir="$HOME/repos/${owner_repo#*/}"
+
+  [ -d "$dir" ] || gh repo clone "$owner_repo" "$dir" || return
+  cd "$dir" || return
+
+  # `gh pr checkout` fetches refs/pull/N/head through the API, so the fork of a
+  # cross-fork PR is never cloned or added as a remote.
+  gh pr checkout "$number" || return
+
+  claude "/review"
+}
+alias rp="review-pr"
