@@ -7,7 +7,7 @@ fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 
 # Shell Options
 setopt autocd # Automatically cd into typed directory.
-stty stop undef # Disable ctrl-s to freeze terminal.
+unsetopt FLOW_CONTROL # Disable ctrl-s to freeze terminal (builtin; no stty fork).
 setopt interactive_comments
 setopt EXTENDED_GLOB               # Enable ** ~ ^ glob operators
 unsetopt NOMATCH                   # Pass unmatched globs through (like bash)
@@ -55,7 +55,20 @@ fpath=("/opt/homebrew/share/zsh-completions" $fpath)
 autoload -U compinit
 zstyle ':completion:*' menu select
 zmodload zsh/complist
-compinit -i -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
+# `compinit -i` rescans every fpath dir and runs compaudit on each start
+# (~110ms). Rescan only when the dump is missing or over a day old (~25ms
+# otherwise) — new brew/mise completions are picked up within a day, or
+# immediately by deleting the dump. The (#qN.mh+24) qualifier needs
+# EXTENDED_GLOB, set above.
+_zcompdump="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
+[[ -d "${_zcompdump:h}" ]] || mkdir -p "${_zcompdump:h}"
+_zcompdump_stale=( ${_zcompdump}(#qN.mh+24) )
+if [[ ! -s $_zcompdump || ${#_zcompdump_stale} -gt 0 ]]; then
+  compinit -i -d "$_zcompdump"
+else
+  compinit -C -d "$_zcompdump"
+fi
+unset _zcompdump _zcompdump_stale
 _comp_options+=(globdots) # Include hidden files.
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*:descriptions' format '[%d]'
