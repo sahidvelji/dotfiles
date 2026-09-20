@@ -30,6 +30,7 @@ alias \
   ff="fastfetch" \
   m="mise" \
   mr="mise run" \
+  rt="mise run repos-tidy" \
   sudo="sudo " \
   py="python3" \
   space="du -hd 1 . | sort -h" \
@@ -82,6 +83,13 @@ ghc() {
   repo_name="$(echo "$url" | sed 's|.*github\.com[:/][^/]*/||; s|/.*||')"
   gh repo clone "$url" "$HOME/repos/$repo_name" -- "${@:2}" &&
     cd "$HOME/repos/$repo_name"
+}
+
+ghf() {
+  local upstream
+  upstream="$(gh repo view --json nameWithOwner --jq .nameWithOwner)" || return
+  gh repo fork --remote=true --default-branch-only &&
+    gh repo set-default "$upstream"
 }
 
 se() {
