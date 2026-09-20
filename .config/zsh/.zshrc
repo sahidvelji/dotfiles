@@ -48,8 +48,6 @@ fi
 unset _shell_dir
 
 # Completions
-fpath=("${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions" $fpath)
-
 fpath=("/opt/homebrew/share/zsh-completions" $fpath)
 
 autoload -U compinit
