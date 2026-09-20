@@ -121,6 +121,6 @@ review-pr() {
   # cross-fork PR is never cloned or added as a remote.
   gh pr checkout "$number" || return
 
-  claude "/review"
+  claude "/review $number"
 }
 alias rp="review-pr"
