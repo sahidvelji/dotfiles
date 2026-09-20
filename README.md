@@ -15,7 +15,8 @@ and Homebrew (system packages).
 - The same config declares macOS preferences under `[bootstrap.macos]`
 - Homebrew packages live in `.config/homebrew/Brewfile`
   and install via `brew bundle --global`
-- `mise.toml` defines a few small tasks that wrap brew commands
+- `mise.toml` defines a few small tasks scoped to this repo,
+  and `.config/mise/tasks/` holds global tasks that run from anywhere
 
 `mise dot` is the short spelling of `mise dotfiles` / `mise bootstrap dotfiles`.
 
@@ -134,6 +135,33 @@ mise run brew-install   # install packages from Brewfile
 ```
 
 Run `mise run brew-dump` before committing to capture any new brew packages.
+
+## Tasks
+
+`mise.toml` at the repo root holds tasks scoped to this repo
+(`brew-dump`, `brew-install`);
+they are only visible from inside it.
+`.config/mise/tasks/` holds global file tasks,
+symlinked into `~/.config/mise/tasks/`,
+so they run from any directory.
+
+```bash
+mise run repos-tidy                      # tidy the repo you are standing in
+mise run repos-tidy --all                # every repo under ~/repos
+mise run repos-tidy --all --jobs 8       # ...eight at a time
+mise run repos-tidy --all --dry-run      # report without deleting branches
+```
+
+`repos-tidy` fetches with `--prune`,
+then fast-forwards the default branch —
+skipping the pull when the worktree is dirty,
+and updating the branch without a checkout
+when the repo is sitting on a feature branch.
+Local-branch pruning is delegated to
+[`gh-poi`](https://github.com/seachicken/gh-poi),
+which deletes branches whose pull request has merged or closed.
+
+A new task file needs `mise dot apply` before it is runnable from elsewhere.
 
 ## Claude Code config
 
