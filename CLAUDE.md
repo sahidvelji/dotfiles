@@ -15,3 +15,10 @@ Only *new* files need `mise bootstrap dotfiles apply`
 before they exist in `$HOME`.
 Global agent instructions live in `.claude/CLAUDE.md`,
 symlinked to `~/.claude/CLAUDE.md`.
+
+## Git
+
+Commit and push to `main` directly.
+This repo does not use feature branches or pull requests,
+so the usual "branch first when on the default branch" rule does not apply here.
+Still ask before committing.
