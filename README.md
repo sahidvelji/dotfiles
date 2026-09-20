@@ -146,20 +146,38 @@ symlinked into `~/.config/mise/tasks/`,
 so they run from any directory.
 
 ```bash
-mise run repos-tidy                      # tidy the repo you are standing in
-mise run repos-tidy --all                # every repo under ~/repos
-mise run repos-tidy --all --jobs 8       # ...eight at a time
-mise run repos-tidy --all --dry-run      # report without deleting branches
+mise run repos-tidy                       # tidy the repo you are standing in
+mise run repos-tidy --all                 # every repo under ~/repos
+mise run repos-tidy hk pklr               # only these, named by directory
+mise run repos-tidy --all --jobs 8        # ...eight at a time
+mise run repos-tidy --all --dry-run       # report only; touches nothing
+mise run repos-tidy --all --force-closed  # also prune unmerged closed PR branches
 ```
 
-`repos-tidy` fetches with `--prune`,
+For each repo it fetches every remote with `--prune`,
 then fast-forwards the default branch —
 skipping the pull when the worktree is dirty,
 and updating the branch without a checkout
 when the repo is sitting on a feature branch.
 Local-branch pruning is delegated to
 [`gh-poi`](https://github.com/seachicken/gh-poi),
-which deletes branches whose pull request has merged or closed.
+which deletes branches whose pull request has merged.
+
+Two details worth knowing:
+
+- `gh-poi` will not delete the branch that is checked out,
+  so a repo left sitting on a branch whose PR has already merged
+  would never be pruned.
+  `repos-tidy` switches back to the default branch first,
+  but only when the worktree is clean
+  and nothing is still open for the same head.
+- `--dry-run` skips the fetch as well as every write,
+  so the "behind by N" counts it reports
+  come from the last real run rather than from the remote.
+
+Repos with a detached HEAD are reported and skipped.
+The default branch is refreshed from whatever it actually tracks,
+which in a fork is `upstream` rather than the fork's own `origin`.
 
 A new task file needs `mise dot apply` before it is runnable from elsewhere.
 
