@@ -27,7 +27,7 @@ if [[ "${1-}" == "__one" ]]; then
 
 	cd "$repo" || exit 0
 
-	if ! git fetch --prune --quiet 2>/dev/null; then
+	if ! git fetch --all --prune --quiet 2>/dev/null; then
 		printf '%-24s fetch failed\n' "$name"
 		exit 0
 	fi
@@ -45,24 +45,32 @@ if [[ "${1-}" == "__one" ]]; then
 	fi
 	default="${default#origin/}"
 
+	# The default branch does not always track origin: a fork clone typically
+	# pulls from upstream and pushes to origin. Honour whatever it is set to
+	# track, and name the remote in the summary when it is not origin.
+	tracking="$(git rev-parse --abbrev-ref --symbolic-full-name "$default@{upstream}" 2>/dev/null)"
+	[[ -n $tracking ]] || tracking="origin/$default"
+	src=""
+	[[ ${tracking%%/*} == origin ]] || src=" (${tracking%%/*})"
+
 	current="$(git symbolic-ref --quiet --short HEAD 2>/dev/null)"
 
 	if [[ $current == "$default" ]]; then
 		if [[ -n "$(git status --porcelain)" ]]; then
 			status+=("dirty, $default not pulled")
-		elif git merge --ff-only --quiet "origin/$default" 2>/dev/null; then
-			status+=("$default up to date")
+		elif git merge --ff-only --quiet "$tracking" 2>/dev/null; then
+			status+=("$default up to date$src")
 		else
-			status+=("$default diverged")
+			status+=("$default diverged$src")
 		fi
 	else
 		# Fetching from "." moves the local branch to match the already-fetched
 		# remote ref with no checkout and no second network round trip. Without
 		# --force this refuses anything that is not a fast-forward.
-		if git fetch --quiet . "refs/remotes/origin/$default:refs/heads/$default" 2>/dev/null; then
-			status+=("$default fast-forwarded, on $current")
+		if git fetch --quiet . "refs/remotes/$tracking:refs/heads/$default" 2>/dev/null; then
+			status+=("$default fast-forwarded$src, on $current")
 		else
-			status+=("$default diverged, on $current")
+			status+=("$default diverged$src, on $current")
 		fi
 	fi
 
