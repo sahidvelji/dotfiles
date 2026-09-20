@@ -8,7 +8,7 @@
 #   -c    Extract archive into current directory (default: creates new directory)
 #
 # Supported formats: tar.bz2, tar.xz, tar.gz, tar.zst, tar, zip, 7z, rar, gz, bz2, xz, Z, lzma, exe
-# Dependencies: tar, gzip, bzip2, unzip, 7z (and other format-specific tools as needed)
+# Dependencies: tar, gzip, bzip2, unzip, 7zz (and other format-specific tools as needed)
 
 extracthere=0
 
