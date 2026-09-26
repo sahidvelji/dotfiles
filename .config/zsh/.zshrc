@@ -134,6 +134,14 @@ _cached_source() {
 (( $+commands[zoxide] ))   && _cached_source zoxide zoxide init zsh
 
 [ -f /opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh ] && source /opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh
+
+# Suggest from history first, then fall back to the completion system. The
+# plugin defaults to (history) alone, which can only ever replay a line typed
+# before; `completion` also suggests paths, flags, branches and mise tasks that
+# have no history entry. It is ~10000x costlier (it forks a zpty vs. one lookup
+# in $history), but it only runs when history misses, and async is on by
+# default for zsh >= 5.0.8 so the work never blocks a keystroke.
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
