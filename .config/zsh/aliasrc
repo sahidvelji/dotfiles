@@ -31,7 +31,6 @@ alias \
   m="mise" \
   mr="mise run" \
   rt="mise run repos-tidy" \
-  sudo="sudo " \
   py="python3" \
   space="du -hd 1 . | sort -h" \
   v="$EDITOR"
