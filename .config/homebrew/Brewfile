@@ -87,7 +87,7 @@ brew "zsh-syntax-highlighting"
 brew "raine/claude-history/claude-history", trusted: true
 cask "bitwarden"
 cask "claude"
-cask "claude-code"
+cask "claude-code@latest"
 cask "cmux"
 cask "discord"
 cask "font-hack-nerd-font"
