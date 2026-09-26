@@ -28,31 +28,27 @@ setopt HIST_FCNTL_LOCK         # fcntl locking, safer with concurrent SHARE_HIST
 setopt HIST_REDUCE_BLANKS          # Remove extra blanks from commands
 setopt HIST_VERIFY                 # Show expanded history before executing (!! safety)
 
-_shell_dir="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
-
-# Source aliases
-[ -f "$_shell_dir/aliasrc" ] && source "$_shell_dir/aliasrc"
+# aliasrc, bm-dirs and bm-files live in $ZDOTDIR; zsh is their only reader.
+[ -f "$ZDOTDIR/aliasrc" ] && source "$ZDOTDIR/aliasrc"
 
 # Bookmark aliases from bm-dirs/bm-files; `(e)` expands their ${XDG_*:-...} forms.
 () {
   local key rest
-  if [[ -r "$_shell_dir/bm-dirs" ]]; then
+  if [[ -r "$ZDOTDIR/bm-dirs" ]]; then
     while IFS=$' \t' read -r key rest; do
       [[ -z $key || $key == \#* ]] && continue
       rest=${${rest%%\#*}%%[[:space:]]##}
       alias -- "$key=cd ${(e)rest} && ll"
-    done < "$_shell_dir/bm-dirs"
+    done < "$ZDOTDIR/bm-dirs"
   fi
-  if [[ -r "$_shell_dir/bm-files" ]]; then
+  if [[ -r "$ZDOTDIR/bm-files" ]]; then
     while IFS=$' \t' read -r key rest; do
       [[ -z $key || $key == \#* ]] && continue
       rest=${${rest%%\#*}%%[[:space:]]##}
       alias -- "$key=$EDITOR ${(e)rest}"
-    done < "$_shell_dir/bm-files"
+    done < "$ZDOTDIR/bm-files"
   fi
 }
-
-unset _shell_dir
 
 # Completions
 fpath=("/opt/homebrew/share/zsh-completions" $fpath)
