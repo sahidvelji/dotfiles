@@ -1,6 +1,6 @@
-al	${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc
-bd	${XDG_CONFIG_HOME:-$HOME/.config}/zsh/bm-dirs
-bf	${XDG_CONFIG_HOME:-$HOME/.config}/zsh/bm-files
-cfv	${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua
-cfz	${XDG_CONFIG_HOME:-$HOME/.config}/zsh/.zshrc
-hi	${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history
+al    ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc
+bd    ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/bm-dirs
+bf    ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/bm-files
+cfv   ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua
+cfz   ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/.zshrc
+hi    ${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history
