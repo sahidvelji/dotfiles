@@ -2,17 +2,17 @@
 # vim: ft=sh
 
 # Color Defaults
-alias \
+noexpand \
   ls="eza --git --git-repos" \
   grep="grep --color=auto"
 
 # ls Shorthand
-alias \
+noexpand \
   ll="ls --all --long" \
   l="ls --all"
 
 # Safety Defaults
-alias \
+noexpand \
   df="df -h" \
   cp="cp -iv" \
   mv="mv -iv" \
@@ -20,9 +20,12 @@ alias \
   rm="rm -vI" \
   mkd="mkdir -pv"
 
+# Tool Defaults
+noexpand \
+  bc="bc -ql"
+
 # General Shortcuts
 alias \
-  bc="bc -ql" \
   ..="cd .. && ll" \
   j="jobs" \
   e="exit" \

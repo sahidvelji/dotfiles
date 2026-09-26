@@ -28,7 +28,12 @@ setopt HIST_FCNTL_LOCK         # fcntl locking, safer with concurrent SHARE_HIST
 setopt HIST_REDUCE_BLANKS          # Remove extra blanks from commands
 setopt HIST_VERIFY                 # Show expanded history before executing (!! safety)
 
-# aliasrc, bm-dirs and bm-files live in $ZDOTDIR; zsh is their only reader.
+# `noexpand` declares an alias that is configuration rather than shorthand, so
+# the expansion widget below leaves it alone. Marking it beside the alias keeps
+# the two from drifting apart.
+_globalias_skip=()
+noexpand() { local s; for s in "$@"; do _globalias_skip+=${s%%=*}; alias -- "$s"; done }
+
 [ -f "$ZDOTDIR/aliasrc" ] && source "$ZDOTDIR/aliasrc"
 
 # Bookmark aliases from bm-dirs/bm-files; `(e)` expands their ${XDG_*:-...} forms.
@@ -105,6 +110,24 @@ preexec() { echo -ne '\e[6 q' ;} # Use beam shape cursor for each new prompt.
 bindkey -s "^p" "..\n"
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
+
+# Expand aliases in place on Space and Enter, so $HISTFILE gets the real command.
+# Keep aliases flat: `_expand_alias` resolves one level and cannot be looped.
+_globalias_expand() {
+  [[ $LBUFFER == *[[:alnum:]] ]] || return
+  local word=${${(Az)LBUFFER}[-1]}
+  (( $_globalias_skip[(Ie)$word] )) && return
+  zle _expand_alias
+}
+globalias()        { _globalias_expand; zle self-insert }
+globalias-accept() { _globalias_expand; zle accept-line }
+zle -N globalias
+zle -N globalias-accept
+bindkey -M viins ' '  globalias
+bindkey -M viins '^ ' magic-space       # Ctrl-Space = literal space; terminals
+bindkey -M viins '^@' magic-space       # send it as either ^ space or NUL
+bindkey -M viins '^M' globalias-accept
+bindkey -M vicmd '^M' globalias-accept
 
 # FZF options + widgets (interactive)
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40% --bind=ctrl-z:ignore"
