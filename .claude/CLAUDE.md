@@ -56,17 +56,14 @@ append this as the last line:
 
 - **Tool** — harness name: `Claude Code`, `Codex`.
 - **Model** — what the harness reports for the session,
-  verbatim after the provider prefix (`anthropic/claude-5-opus[1m]`) —
+  verbatim after the `anthropic/` prefix,
+  suffixes such as `[1m]` included —
   never tidied into a canonical API id.
 - **Version** — the harness's `--version`, leading field only
   (`claude --version` → `2.1.195 (Claude Code)` → `2.1.195`).
 
 Run the version command rather than recalling it,
 and write `unavailable` only if that actually fails.
-
-Never hand-write a `Co-Authored-By:` trailer —
-in a commit the harness adds it,
-and in GitHub prose the disclosure line replaces it.
 
 ## Task Runners
 
