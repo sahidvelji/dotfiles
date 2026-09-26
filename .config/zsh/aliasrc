@@ -45,15 +45,15 @@ alias \
 # git Aliases
 alias \
   g="git" \
-  gl="g log" \
-  gp="g push" \
-  gs="g status" \
-  gd="g diff" \
-  gu="g pull" \
-  gcom="g add -A && g status && g commit -am" \
-  gr="g restore :/ && gs" \
-  grs="g restore --staged :/ && gs" \
-  ga="g add -A"
+  gl="git log" \
+  gp="git push" \
+  gs="git status" \
+  gd="git diff" \
+  gu="git pull" \
+  gcom="git add -A && git status && git commit -am" \
+  gr="git restore :/ && git status" \
+  grs="git restore --staged :/ && git status" \
+  ga="git add -A"
 
 # Tool Aliases
 alias b="bat"
