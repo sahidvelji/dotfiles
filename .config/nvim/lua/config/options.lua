@@ -7,5 +7,3 @@ vim.opt.wrap = true
 
 -- Disable cursor blinking in terminal mode
 vim.opt.guicursor:append("t:block-blinkon0")
--- Prevent programs inside the Neovim terminal from changing the cursor shape
-vim.g.terminal_set_colors = 0
