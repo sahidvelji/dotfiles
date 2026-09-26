@@ -26,7 +26,6 @@ export TERMINAL="ghostty"
 
 # ~/ clean-up: redirect tool state/config to XDG paths.
 export LESSHISTFILE="$XDG_CACHE_HOME/less/history"
-export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
 export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
