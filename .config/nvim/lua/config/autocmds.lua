@@ -28,8 +28,3 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = { "bm-files", "bm-dirs" },
   command = "sort u",
 })
-
-vim.api.nvim_create_autocmd("BufWritePost", {
-  pattern = { "bm-files", "bm-dirs" },
-  command = "!generate-shortcuts",
-})

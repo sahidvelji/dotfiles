@@ -30,20 +30,27 @@ setopt HIST_VERIFY                 # Show expanded history before executing (!! 
 
 _shell_dir="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
 
-# Bookmark shortcuts. `generate-shortcuts` turns shell/bm-dirs and shell/bm-files
-# into shortcutrc (aliases: h, cac, dl, cfz...) and zshnameddirrc (~h, ~cac...).
-# Regenerated only when a bookmark file is newer than the output, so the usual
-# case costs two stat calls. The nvim BufWritePost hook also regenerates on save.
-if (( $+commands[generate-shortcuts] )) && [[ ! -s "$_shell_dir/shortcutrc" \
-    || "$_shell_dir/bm-dirs" -nt "$_shell_dir/shortcutrc" \
-    || "$_shell_dir/bm-files" -nt "$_shell_dir/shortcutrc" ]]; then
-    generate-shortcuts
-fi
-
-# Source aliases and the generated shortcuts
+# Source aliases
 [ -f "$_shell_dir/aliasrc" ] && source "$_shell_dir/aliasrc"
-[ -f "$_shell_dir/shortcutrc" ] && source "$_shell_dir/shortcutrc"
-[ -f "$_shell_dir/zshnameddirrc" ] && source "$_shell_dir/zshnameddirrc"
+
+# Bookmark aliases from bm-dirs/bm-files; `(e)` expands their ${XDG_*:-...} forms.
+() {
+  local key rest
+  if [[ -r "$_shell_dir/bm-dirs" ]]; then
+    while IFS=$' \t' read -r key rest; do
+      [[ -z $key || $key == \#* ]] && continue
+      rest=${${rest%%\#*}%%[[:space:]]##}
+      alias -- "$key=cd ${(e)rest} && ll"
+    done < "$_shell_dir/bm-dirs"
+  fi
+  if [[ -r "$_shell_dir/bm-files" ]]; then
+    while IFS=$' \t' read -r key rest; do
+      [[ -z $key || $key == \#* ]] && continue
+      rest=${${rest%%\#*}%%[[:space:]]##}
+      alias -- "$key=$EDITOR ${(e)rest}"
+    done < "$_shell_dir/bm-files"
+  fi
+}
 
 unset _shell_dir
 
