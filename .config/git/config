@@ -47,6 +47,8 @@
 [fetch]
 	# Remove local references to remote branches that have been deleted
 	prune = true
+	# Plain `git fetch` fetches every remote, keeping a fork's upstream fresh
+	all = true
 
 [help]
 	# Prompt to run the suggested correction when a command is misspelled
