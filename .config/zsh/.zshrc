@@ -78,7 +78,10 @@ unset _zcompdump _zcompdump_stale
 _comp_options+=(globdots) # Include hidden files.
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*:descriptions' format '[%d]'
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# Colour completion lists by file kind, matching eza's default theme. Set here
+# rather than through LS_COLORS, which eza also reads and would then override.
+zstyle ':completion:*' list-colors \
+  'di=1;34' 'ln=36' 'or=31' 'ex=1;32' 'pi=33' 'so=1;31' 'bd=1;33' 'cd=1;33'
 
 # Vi Mode
 bindkey -v
