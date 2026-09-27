@@ -56,11 +56,6 @@
 	# Name for the initial branch when creating a new repository
 	defaultBranch = main
 
-[merge "ours"]
-	# Keep our version of a file and discard incoming changes during merges
-	# Requires a .gitattributes entry (e.g. "path/to/file merge=ours") to take effect
-	driver = true
-
 [credential]
 	# Clear system-level credential helpers (e.g. osxkeychain from Homebrew)
 	# so only the per-host helpers below are used
