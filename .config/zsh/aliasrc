@@ -61,6 +61,7 @@ alias \
 # Tool Aliases
 alias b="bat"
 alias c="claude"
+alias ch="claude-history"
 alias lg="lazygit"
 
 # Functions

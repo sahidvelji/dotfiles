@@ -37,20 +37,26 @@ noexpand() { local s; for s in "$@"; do _globalias_skip+=${s%%=*}; alias -- "$s"
 [ -f "$ZDOTDIR/aliasrc" ] && source "$ZDOTDIR/aliasrc"
 
 # Bookmark aliases from bm-dirs/bm-files; `(e)` expands their ${XDG_*:-...} forms.
+# Each entry also registers a `hash -d` named directory so the key works as a
+# path prefix (`~re`, `~cfz`) in any command and abbreviates in the prompt.
 () {
-  local key rest
+  local key rest dir
   if [[ -r "$ZDOTDIR/bm-dirs" ]]; then
     while IFS=$' \t' read -r key rest; do
       [[ -z $key || $key == \#* ]] && continue
       rest=${${rest%%\#*}%%[[:space:]]##}
-      alias -- "$key=cd ${(e)rest} && ll"
+      dir=${(e)rest}
+      alias -- "$key=cd $dir && ll"
+      hash -d -- "$key=$dir"
     done < "$ZDOTDIR/bm-dirs"
   fi
   if [[ -r "$ZDOTDIR/bm-files" ]]; then
     while IFS=$' \t' read -r key rest; do
       [[ -z $key || $key == \#* ]] && continue
       rest=${${rest%%\#*}%%[[:space:]]##}
-      alias -- "$key=$EDITOR ${(e)rest}"
+      dir=${(e)rest}
+      alias -- "$key=$EDITOR $dir"
+      hash -d -- "$key=$dir"
     done < "$ZDOTDIR/bm-files"
   fi
 }
