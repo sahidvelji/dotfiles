@@ -44,6 +44,19 @@ apps = [
   "/Applications/Discord.app",
 ]
 
+# Additive: apps not listed here stay in Open at Login. This is the one list of
+# what starts at login.
+[bootstrap.macos.login_items]
+apps = [
+  "/Applications/Bitwarden.app",
+  "/Applications/Rectangle.app",
+  "/Applications/Claude.app",
+  "/Applications/Wispr Flow.app",
+  "/Applications/Google Drive.app",
+  "/Applications/Ghostty.app",
+  "/Applications/Google Chrome.app",
+]
+
 [bootstrap.macos.finder]
 show_all_files = true
 preferred_view_style = "list"
@@ -78,6 +91,8 @@ ShowSeconds = true      # stock macOS hides seconds
 # Rectangle (cask). App preferences belong here, not as a symlinked plist —
 # cfprefsd caches those.
 [bootstrap.macos.defaults."com.knollsoft.Rectangle"]
+# Rectangle's own "Launch on login" checkbox. Login is handled by
+# login_items above; this only keeps the checkbox in agreement.
 launchOnLogin = true
 allowAnyShortcut = true         # allow bindings Rectangle would otherwise reject
 subsequentExecutionMode = 0     # what repeating a shortcut does

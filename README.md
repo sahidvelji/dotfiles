@@ -92,6 +92,8 @@ raw domains (`[bootstrap.macos.defaults."<domain>"]`) for everything else,
 third-party apps included;
 and `[[bootstrap.macos.defaults_entries]]` for `defaults -currentHost`
 preferences, which are scoped to one machine rather than the user account.
+`[bootstrap.macos.login_items]` lists the apps that open at login;
+it only adds entries, so apps that register themselves are left alone.
 
 ```bash
 mise bootstrap macos defaults status     # set / differs / unset per key
