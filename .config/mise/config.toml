@@ -85,6 +85,15 @@ AppleICUForce24HourTime = true                # 24-hour clock everywhere
 # Raw + float: the friendly `initial_key_repeat` accepts integers only.
 InitialKeyRepeat = 25.0                       # delay before a held key repeats
 
+[bootstrap.macos.defaults."com.apple.AppleMultitouchTrackpad"]
+TrackpadRightClick = true   # two-finger secondary click (built-in trackpad)
+
+[bootstrap.macos.defaults."com.apple.driver.AppleBluetoothMultitouch.trackpad"]
+TrackpadRightClick = true   # same, for Bluetooth trackpads
+
+[bootstrap.macos.defaults."com.apple.finder"]
+NewWindowTarget = "PfAF"    # new Finder windows open at Recents
+
 [bootstrap.macos.defaults."com.apple.menuextra.clock"]
 ShowSeconds = true      # stock macOS hides seconds
 
@@ -97,6 +106,8 @@ launchOnLogin = true
 allowAnyShortcut = true         # allow bindings Rectangle would otherwise reject
 subsequentExecutionMode = 0     # what repeating a shortcut does
 SUEnableAutomaticChecks = false # no Sparkle auto-update checks
+todo = 2                        # Todo mode off
+moveCursorAcrossDisplays = 2    # don't drag the cursor along to another display
 toggleTodo = { keyCode = 11, modifierFlags = 786432 }   # ⌃⌥B
 reflowTodo = { keyCode = 45, modifierFlags = 786432 }   # ⌃⌥N
 
