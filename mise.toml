@@ -3,7 +3,7 @@ output = "interleave"
 
 [tasks.brew-dump]
 description = "Update Brewfile with current brew packages"
-run = 'brew bundle dump --global --force --no-describe'
+run = 'brew bundle dump --global --force --no-describe --no-mas --no-vscode --no-go --no-cargo --no-uv --no-flatpak --no-winget --no-krew --no-npm'
 
 [tasks.brew-install]
 description = "Install brew packages from Brewfile"
