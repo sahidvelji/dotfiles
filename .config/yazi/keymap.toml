@@ -1,8 +1,8 @@
 [mgr]
 prepend_keymap = [
   # Tool integrations
-  { on = [ "g", "i" ], run = "shell 'lazygit' --block --confirm", desc = "Open lazygit" },
-  { on = [ "g", "s" ], run = "shell '$SHELL' --block --confirm",  desc = "Open shell" },
+  { on = [ "g", "i" ], run = "shell 'lazygit' --block", desc = "Open lazygit" },
+  { on = [ "g", "s" ], run = "shell '$SHELL' --block",  desc = "Open shell" },
 
   # Goto shortcuts
   { on = [ "g", "r" ], run = "cd ~/repos",           desc = "Go ~/repos" },

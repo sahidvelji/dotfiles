@@ -10,7 +10,7 @@ tab_size = 4
 
 [opener]
 pdf = [
-	{ run = 'tdf "$@"', block = true, desc = "Open in tdf", for = "unix" },
+	{ run = 'tdf %s', block = true, desc = "Open in tdf", for = "unix" },
 ]
 
 [open]
