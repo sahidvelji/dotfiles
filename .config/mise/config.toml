@@ -97,6 +97,9 @@ NewWindowTarget = "PfAF"    # new Finder windows open at Recents
 [bootstrap.macos.defaults."com.apple.menuextra.clock"]
 ShowSeconds = true      # stock macOS hides seconds
 
+[bootstrap.macos.defaults."com.apple.HIToolbox"]
+AppleFnUsageType = 0    # Fn/Globe key does nothing (stock shows Emoji & Symbols)
+
 # Rectangle (cask). App preferences belong here, not as a symlinked plist —
 # cfprefsd caches those.
 [bootstrap.macos.defaults."com.knollsoft.Rectangle"]
