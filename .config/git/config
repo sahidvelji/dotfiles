@@ -64,7 +64,8 @@
 	helper = ""
 
 [credential "https://github.com"]
-	helper = !gh auth git-credential
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
 
 [core]
 	# Cache untracked file state between runs to speed up repeated status checks
