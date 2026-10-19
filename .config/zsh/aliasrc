@@ -68,12 +68,12 @@ alias lg="lazygit"
 
 # Yazi cd-on-exit: q quits and cds to last dir, Q quits without cd
 f() {
-  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
   yazi "$@" --cwd-file="$tmp"
   if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
     builtin cd -- "$cwd"
   fi
-  rm -f -- "$tmp"
+  command rm -f -- "$tmp" # bypass the rm alias, whose -v echoes the path
 }
 
 cpf() { cp "$@" && cd "$_" && ll; }
