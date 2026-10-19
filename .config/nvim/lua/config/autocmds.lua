@@ -21,7 +21,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 vim.api.nvim_create_autocmd("BufWritePost", {
   pattern = "subs.csv",
-  command = "!generate-subs",
+  command = "!generate-subs %:p",
 })
 
 vim.api.nvim_create_autocmd("BufWritePre", {

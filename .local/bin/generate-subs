@@ -1,69 +1,73 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Generate macOS text replacements plist from CSV.
+#!/usr/bin/env bash
+# Generate a macOS text-replacements plist from a CSV, for manual import into
+# System Settings > Keyboard > Text Replacements.
+#
+# Modern macOS keeps text replacements in a CloudKit-backed Core Data store
+# (~/Library/KeyboardServices/TextReplacements.db), NOT in the legacy
+# NSUserDictionaryReplacementItems global preference. Writing that preference
+# has no effect on what Settings or the input engine actually use, so there is
+# no supported way to apply replacements from the command line. The only
+# supported writer is the Settings pane itself.
+#
+# This script therefore emits the drag-to-import plist format (an array of
+# <dict>s keyed `shortcut`/`phrase`). To apply it:
+#   1. Run this script.
+#   2. Open System Settings > Keyboard > Text Replacements.
+#   3. Drag the generated .plist file from Finder into the list.
+# The import is additive, so clear out stale rows first if you want the CSV to
+# be authoritative.
+#
+# Usage: generate-subs [input.csv] [output.plist]
+#   defaults: ~/.config/macos/subs.csv -> ~/subs.plist
 
-Purpose:
-    Converts a CSV file of text replacement shortcuts into a macOS-compatible
-    plist file that can be imported into System Settings > Keyboard > Text
-    Replacements.
+set -euo pipefail
 
-Usage:
-    generate-subs [input.csv] [output.plist]
+SUBS_CSV="${1:-$HOME/.config/macos/subs.csv}"
+OUT_PLIST="${2:-$HOME/subs.plist}"
 
-Arguments:
-    input.csv    Path to input CSV file (default: $HOME/Documents/subs.csv)
-    output.plist Path to output plist file (default: $HOME/Documents/subs.plist)
+if [[ ! -r "$SUBS_CSV" ]]; then
+  echo "Error: cannot read $SUBS_CSV" >&2
+  exit 1
+fi
 
-Dependencies:
-    - python3 (3.6+)
-    - csv, plistlib, os, sys (stdlib)
-"""
+awk '
+function esc(s,   r) {
+  r = s
+  gsub(/&/, "\\&amp;", r)   # must run first, before < and >
+  gsub(/</, "\\&lt;",  r)
+  gsub(/>/, "\\&gt;",  r)
+  return r
+}
+BEGIN {
+  print "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+  print "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"
+  print "<plist version=\"1.0\">"
+  print "<array>"
+}
+NR == 1          { next }   # skip header
+/^[[:space:]]*$/ { next }   # skip blank lines
+{
+  c = index($0, ",")        # split on the first comma only
+  if (c == 0) next
+  shortcut = substr($0, 1, c - 1)
+  phrase   = substr($0, c + 1)
+  sub(/\r$/, "", phrase)                              # tolerate CRLF
+  gsub(/^[[:space:]]+|[[:space:]]+$/, "", shortcut)   # trim shortcut
+  if (shortcut == "") next
+  n++
+  print "\t<dict>"
+  print "\t\t<key>shortcut</key>"
+  print "\t\t<string>" esc(shortcut) "</string>"
+  print "\t\t<key>phrase</key>"
+  print "\t\t<string>" esc(phrase) "</string>"
+  print "\t</dict>"
+}
+END {
+  print "</array>"
+  print "</plist>"
+  printf "Generated %d entries\n", n > "/dev/stderr"
+}
+' "$SUBS_CSV" > "$OUT_PLIST"
 
-import csv
-import os
-import sys
-import plistlib
-
-
-def main():
-    # Set default paths
-    home = os.environ['HOME']
-    default_input = os.path.join(home, 'Documents', 'subs.csv')
-    default_output = os.path.join(home, 'Documents', 'subs.plist')
-
-    # Parse command-line arguments
-    input_path = sys.argv[1] if len(sys.argv) > 1 else default_input
-    output_path = sys.argv[2] if len(sys.argv) > 2 else default_output
-
-    try:
-        # Read CSV file
-        with open(input_path, 'r', encoding='utf-8') as csv_file:
-            csvfile = csv.DictReader(csv_file)
-            entries = list(csvfile)
-
-        if not entries:
-            print(f"Warning: No entries found in {input_path}")
-            return
-
-        # Write to plist file
-        with open(output_path, 'wb') as plist_file:
-            plistlib.dump(entries, plist_file)
-
-        print(f"Successfully converted {len(entries)} text replacement entries")
-        print(f"Input:  {input_path}")
-        print(f"Output: {output_path}")
-
-    except FileNotFoundError as e:
-        print(f"Error: File not found - {e.filename}", file=sys.stderr)
-        sys.exit(1)
-    except IOError as e:
-        print(f"Error: I/O error - {e}", file=sys.stderr)
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
-
-
-if __name__ == '__main__':
-    main()
+echo "Wrote $OUT_PLIST"
+echo "Import: System Settings > Keyboard > Text Replacements, then drag the file in."
