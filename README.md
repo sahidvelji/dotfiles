@@ -14,7 +14,7 @@ and Homebrew (system packages).
   linking every leaf file into the target)
 - The same config declares macOS preferences under `[bootstrap.macos]`
 - Homebrew packages live in `.config/homebrew/Brewfile`
-  and install via `brew bundle --global`
+  and install via `mise run brew-install`
 - `mise.toml` defines a few small tasks scoped to this repo,
   and `.config/mise/tasks/` holds global tasks that run from anywhere
 
@@ -130,6 +130,8 @@ The `Brewfile` tracks installed Homebrew packages (taps, formulae, casks).
 It lives at `.config/homebrew/Brewfile`
 and is symlinked to `~/.config/homebrew/Brewfile`
 (the XDG location `brew bundle --global` reads).
+The tasks below run in the repo's `.config/homebrew` directory instead,
+so they work on a fresh Mac before that symlink exists.
 
 ```bash
 mise run brew-dump      # update Brewfile with currently installed packages

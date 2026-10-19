@@ -1,10 +1,15 @@
 [settings.task]
 output = "interleave"
 
+# Run beside the repo's Brewfile, which brew bundle reads as ./Brewfile.
+# --global would miss it on a fresh Mac: the ~/.config/homebrew symlink does
+# not exist until `mise bootstrap`, so brew falls back to ~/.Brewfile.
 [tasks.brew-dump]
 description = "Update Brewfile with current brew packages"
-run = 'brew bundle dump --global --force --no-describe --no-mas --no-vscode --no-go --no-cargo --no-uv --no-flatpak --no-winget --no-krew --no-npm'
+dir = "{{config_root}}/.config/homebrew"
+run = 'brew bundle dump --force --no-describe --no-mas --no-vscode --no-go --no-cargo --no-uv --no-flatpak --no-winget --no-krew --no-npm'
 
 [tasks.brew-install]
 description = "Install brew packages from Brewfile"
-run = 'brew bundle --global'
+dir = "{{config_root}}/.config/homebrew"
+run = 'brew bundle'
