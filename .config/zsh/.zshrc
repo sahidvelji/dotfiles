@@ -114,7 +114,10 @@ zle-line-init() {
 }
 zle -N zle-line-init
 echo -ne '\e[6 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[6 q' ;} # Use beam shape cursor for each new prompt.
+# Hand external commands the terminal's default cursor (block); zle-line-init
+# restores the beam at the next prompt. Ghostty's own `cursor` integration is
+# off (no-cursor), so this block is the only thing shaping the cursor.
+preexec() { echo -ne '\e[0 q' ;}
 
 # Key Bindings
 bindkey -s "^p" "..\n"
