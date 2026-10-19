@@ -86,8 +86,8 @@ so it is not re-applied.
 
 Preferences live in `.config/mise/config.toml` alongside the dotfile entries,
 in three spellings:
-friendly sections (`[bootstrap.macos.dock]`, `.finder`, `.keyboard`,
-`.trackpad`) for common settings;
+friendly sections (`[bootstrap.macos.dock]`, `.finder`, `.trackpad`)
+for common settings;
 raw domains (`[bootstrap.macos.defaults."<domain>"]`) for everything else,
 third-party apps included;
 and `[[bootstrap.macos.defaults_entries]]` for `defaults -currentHost`
@@ -120,8 +120,8 @@ App preferences belong here rather than as symlinked `.plist` files under
 `~/Library/Preferences`, which `cfprefsd` caches —
 a running app can hold a newer value than the one on disk.
 
-Dock changes need a relaunch:
-`[bootstrap.hooks.post-defaults]` runs `killall Dock` after every
+Dock and Control Center changes need a relaunch:
+`[bootstrap.hooks.post-defaults]` runs `killall Dock ControlCenter` after every
 `mise bootstrap`; after a standalone `apply`, run it yourself.
 
 ## Brewfile
