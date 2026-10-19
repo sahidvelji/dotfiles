@@ -121,9 +121,17 @@ key = "com.apple.mouse.tapBehavior"
 host = "current"
 value = 1               # system-wide tap-to-click ("mouse" is legacy naming)
 
-# Dock re-reads these only on relaunch, and mise never kills apps itself.
+# Menu-bar battery percentage — a per-host Control Center preference.
+[[bootstrap.macos.defaults_entries]]
+domain = "com.apple.controlcenter"
+key = "BatteryShowPercentage"
+host = "current"
+value = true
+
+# Dock and Control Center re-read these only on relaunch, and mise never kills
+# apps itself.
 [bootstrap.hooks.post-defaults]
-run = "killall Dock || true"
+run = "killall Dock ControlCenter || true"
 
 [task_config]
 dir = "{{cwd}}"
