@@ -82,8 +82,9 @@ mvf() { mv "$@" && cd "$_" && ll; }
 ghc() {
   local url="${1:-$(pbpaste)}"
   local repo_name
-  # GitHub URLs are always github.com/owner/repo/... — grab the repo segment
-  repo_name="$(echo "$url" | sed 's|.*github\.com[:/][^/]*/||; s|/.*||')"
+  # Let gh parse it: handles owner/repo, bare names, SSH and .git URLs, and
+  # returns the canonical name if the repo was renamed.
+  repo_name="$(gh repo view "$url" --json name --jq .name)" || return
   gh repo clone "$url" "$HOME/repos/$repo_name" -- "${@:2}" &&
     cd "$HOME/repos/$repo_name"
 }
