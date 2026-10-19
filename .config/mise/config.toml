@@ -61,9 +61,6 @@ apps = [
 show_all_files = true
 preferred_view_style = "list"
 
-[bootstrap.macos.keyboard]
-key_repeat = 2          # fastest repeat once held
-
 [bootstrap.macos.trackpad]
 tap_to_click = true
 
@@ -82,8 +79,10 @@ AppleKeyboardUIMode = 2                       # Tab navigates all dialog control
 NSAutomaticCapitalizationEnabled = false      # no auto-cap mid-sentence
 NSAutomaticPeriodSubstitutionEnabled = false  # no double-space-to-period
 AppleICUForce24HourTime = true                # 24-hour clock everywhere
-# Raw + float: the friendly `initial_key_repeat` accepts integers only.
+# Raw + float: the friendly key_repeat/initial_key_repeat are integer-only, but
+# macOS stores both as reals — an int reads back as a perpetual "Differs".
 InitialKeyRepeat = 25.0                       # delay before a held key repeats
+KeyRepeat = 2.0                               # fastest repeat once held
 
 [bootstrap.macos.defaults."com.apple.AppleMultitouchTrackpad"]
 TrackpadRightClick = true   # two-finger secondary click (built-in trackpad)
