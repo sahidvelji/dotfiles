@@ -6,3 +6,7 @@ local map = vim.keymap.set
 
 -- save file
 map({ "n" }, "<leader>w", "<cmd>w<cr><esc>", { desc = "Save File" })
+-- LazyVim's longer <leader>w maps make the save wait for timeoutlen. Use
+-- <C-w>c to close a window and <leader>uZ to toggle zoom instead.
+pcall(vim.keymap.del, "n", "<leader>wd")
+pcall(vim.keymap.del, "n", "<leader>wm")
