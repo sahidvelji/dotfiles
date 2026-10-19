@@ -52,6 +52,12 @@ return {
   {
     "fatih/vim-go",
     ft = "go",
+    -- `ft` makes these buffer-local to Go, where vim-go's commands exist.
+    keys = {
+      { "<Bslash>t", "<cmd>GoTest ./...<cr>", ft = "go", desc = "Run all tests" },
+      { "<Bslash>c", "<cmd>GoCoverageToggle<cr>", ft = "go", desc = "Annotate code with coverage" },
+      { "<Bslash>a", "<cmd>GoAlternate!<cr>", ft = "go", desc = "switch to the alternate file" },
+    },
     init = function()
       vim.g.go_def_mapping_enabled = 0
       vim.g.go_gopls_enabled = 0
