@@ -71,12 +71,13 @@ zmodload zsh/complist
 # (~110ms). Rescan only when the dump is missing or over a day old (~25ms
 # otherwise) — new brew/mise completions are picked up within a day, or
 # immediately by deleting the dump. The (#qN.mh+24) qualifier needs
-# EXTENDED_GLOB, set above.
+# EXTENDED_GLOB, set above. `touch` because compinit leaves an unchanged dump
+# alone, which would keep it "stale" and send every shell down the slow path.
 _zcompdump="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 [[ -d "${_zcompdump:h}" ]] || mkdir -p "${_zcompdump:h}"
 _zcompdump_stale=( ${_zcompdump}(#qN.mh+24) )
 if [[ ! -s $_zcompdump || ${#_zcompdump_stale} -gt 0 ]]; then
-  compinit -i -d "$_zcompdump"
+  compinit -i -d "$_zcompdump" && touch "$_zcompdump"
 else
   compinit -C -d "$_zcompdump"
 fi
