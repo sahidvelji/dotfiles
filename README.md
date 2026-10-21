@@ -22,6 +22,8 @@ and Homebrew (system packages).
 
 ## Prerequisites
 
+Install [Homebrew](https://brew.sh) first, then mise:
+
 ```bash
 brew install mise
 ```
