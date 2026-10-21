@@ -76,8 +76,8 @@ if [[ "${1-}" == "__one" ]]; then
 	# on a branch whose PR has merged never gets pruned. Step off it, but only
 	# when nothing is still open for the same head.
 	if [[ $current != "$default" ]] && [[ -z "$(git status --porcelain)" ]]; then
-		merged="$(gh pr list --head "$current" --state merged --json number --jq length 2>/dev/null)"
-		open="$(gh pr list --head "$current" --state open --json number --jq length 2>/dev/null)"
+		merged="$(gh pr list --head "$current" --author @me --state merged --json number --jq length 2>/dev/null)"
+		open="$(gh pr list --head "$current" --author @me --state open --json number --jq length 2>/dev/null)"
 		if [[ ${merged:-0} -gt 0 && ${open:-0} -eq 0 ]]; then
 			if ((dry_run)); then
 				status+=("would switch off merged $current")

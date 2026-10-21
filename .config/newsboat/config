@@ -76,5 +76,5 @@ browser "link-handler %u"
 
 macro , open-in-browser -- "open"
 macro b set browser "open --background %u"; open-in-browser-and-mark-read; set browser "link-handler %u" -- "open in a background tab"
-macro c set browser "echo %u | pbcopy"; open-in-browser; set browser "link-handler %u" -- "copy the link"
+macro c set browser "printf %s %u | pbcopy"; open-in-browser; set browser "link-handler %u" -- "copy the link"
 macro o set browser "open --reveal %u"; open-in-browser; set browser "link-handler %u" -- "reveal in Finder"

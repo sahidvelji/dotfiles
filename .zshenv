@@ -16,7 +16,6 @@ export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 
 # Locale
 export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
 
 # Default Programs
 export VISUAL="nvim"
@@ -46,7 +45,7 @@ export CLICOLOR=
 export HOMEBREW_PREFIX="/opt/homebrew"
 export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
 export HOMEBREW_REPOSITORY="/opt/homebrew"
-export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+[[ ":$INFOPATH:" == *:/opt/homebrew/share/info:* ]] || export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 [ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}"
 
 # PATH — dirs we always want at the front. `.zshrc` re-asserts this prefix

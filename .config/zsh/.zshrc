@@ -65,8 +65,7 @@ noexpand() { local s; for s in "$@"; do _globalias_skip+=${s%%=*}; alias -- "$s"
 fpath=("/opt/homebrew/share/zsh-completions" $fpath)
 
 autoload -U compinit
-zstyle ':completion:*' menu select
-zmodload zsh/complist
+zstyle ':completion:*' menu no
 # `compinit -i` rescans every fpath dir and runs compaudit on each start
 # (~110ms). Rescan only when the dump is missing or over a day old (~25ms
 # otherwise) — new brew/mise completions are picked up within a day, or
@@ -93,12 +92,6 @@ zstyle ':completion:*' list-colors \
 # Vi Mode
 bindkey -v
 export KEYTIMEOUT=1
-
-# Use vim keys in tab complete menu:
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select () {
@@ -190,6 +183,8 @@ bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 bindkey '^[OA' history-substring-search-up
 bindkey '^[OB' history-substring-search-down
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
 
 # NOT cached: `mise activate zsh` embeds a snapshot of the live $PATH in its
 # output, so a cached copy replays a stale PATH and wipes the prefix set in

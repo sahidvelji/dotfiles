@@ -54,7 +54,6 @@ alias \
   gd="git diff" \
   gu="git pull" \
   gcom="git add -A && git status && git commit -am" \
-  gr="git restore :/ && git status" \
   grs="git restore --staged :/ && git status" \
   ga="git add -A"
 
