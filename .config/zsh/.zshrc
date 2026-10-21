@@ -193,5 +193,5 @@ bindkey '^[OB' history-substring-search-down
 
 # NOT cached: `mise activate zsh` embeds a snapshot of the live $PATH in its
 # output, so a cached copy replays a stale PATH and wipes the prefix set in
-# ~/.zshenv (~/.local/bin, go/cargo bins, util-linux).
+# ~/.zshenv (~/.local/bin, go/cargo bins).
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
