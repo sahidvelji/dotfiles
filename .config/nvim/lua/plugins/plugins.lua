@@ -6,7 +6,6 @@ return {
         "bash",
         "csv",
         "editorconfig",
-        "fish",
         "git_config",
         "git_rebase",
         "gitattributes",
@@ -18,9 +17,17 @@ return {
         "hurl",
         "jq",
         "make",
-        "nu",
         "toml",
         "zsh",
+      },
+    },
+  },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        -- rumdl comes from Homebrew, not Mason.
+        rumdl = { mason = false },
       },
     },
   },
