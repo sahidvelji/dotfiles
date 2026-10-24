@@ -93,7 +93,6 @@ steps {
     // A symlink to AGENTS.md
     exclude = "CLAUDE.md"
   }
-  ["pkl"] = Builtins.pkl
   ["pkl-format"] = Builtins.pkl_format
 
   // GitHub Actions: actionlint's checks plus zizmor's security audits
