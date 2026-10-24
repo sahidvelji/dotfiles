@@ -1,0 +1,10 @@
+{
+  "formatter": {
+    "indentStyle": "space"
+  },
+  "json": {
+    "formatter": {
+      "expand": "always"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+std = "vim"
+
+[lints]
+# lazy.nvim plugin specs mix the plugin's name with named options.
+mixed_table = "allow"

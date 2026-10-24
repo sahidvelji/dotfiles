@@ -18,6 +18,12 @@ before they exist in `$HOME`.
 Global agent instructions live in `.claude/CLAUDE.md`,
 symlinked to `~/.claude/CLAUDE.md`.
 
+## Linting
+
+`hk.pkl` lints and formats each commit through the global git hooks.
+Run `hk check --all` after editing,
+and `hk fix --all` to apply the formatters.
+
 ## Git
 
 Commit and push to `main` directly.

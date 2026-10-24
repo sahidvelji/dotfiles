@@ -1,0 +1,118 @@
+amends "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Config.pkl"
+
+import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.pkl"
+
+// hk tags `.zshenv` and `aliasrc` as zsh from their shebangs; `.zshrc` has none.
+local zsh =
+  List(
+    new FileSelector { types = List("zsh") },
+    new FileSelector { glob = List(".config/zsh/.zshrc") },
+  )
+
+// lazy.nvim and LazyVim write these; keep them as generated.
+exclude = List(".config/nvim/lazy-lock.json", ".config/nvim/lazyvim.json")
+
+local shfmtFlags = "--indent 2 --case-indent"
+
+steps {
+  // Any file
+  ["check-merge-conflict"] = Builtins.check_merge_conflict
+  ["check-case-conflict"] = Builtins.check_case_conflict
+  ["check-added-large-files"] = Builtins.check_added_large_files
+  ["check-symlinks"] = Builtins.check_symlinks
+  ["destroyed-symlinks"] = Builtins.destroyed_symlinks
+  ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
+  ["check-shebang-scripts-are-executable"] = (Builtins.check_shebang_scripts_are_executable) {
+    // Sourced by zsh, not run; the shebang only names the shell.
+    exclude = List(".zshenv", ".config/zsh/aliasrc")
+  }
+  ["detect-private-key"] = Builtins.detect_private_key
+  ["betterleaks"] = Builtins.betterleaks
+  ["trailing-whitespace"] = Builtins.trailing_whitespace
+  ["newlines"] = Builtins.newlines
+  ["mixed-line-ending"] = Builtins.mixed_line_ending
+  ["byte-order-marker"] = Builtins.byte_order_marker
+  ["typos"] = Builtins.typos
+
+  // Shell
+  ["shellcheck"] = Builtins.shellcheck
+  ["shfmt"] = (Builtins.shfmt) {
+    check_diff { command = "shfmt \(shfmtFlags) --diff --apply-ignore {{ files }}" }
+    check_list_files {
+      command =
+        """
+        files=$(shfmt \(shfmtFlags) --list --apply-ignore {{ files }})
+        if [ -n "$files" ]; then
+        echo "$files"
+        exit 1
+        fi
+        """
+    }
+    fix { command = "shfmt \(shfmtFlags) --write --apply-ignore {{ files }}" }
+  }
+
+  // Zsh: shellcheck does not support it, so `zsh --no-exec` checks that it parses.
+  ["zsh-syntax"] = new Step {
+    match_any = zsh
+    check =
+      """
+      failed=0
+      for f in {{ files }}; do
+      zsh --no-exec "$f" || failed=1
+      done
+      exit $failed
+      """
+  }
+  ["shfmt-zsh"] = (Builtins.shfmt) {
+    match_any = zsh
+    check_diff { command = "shfmt --language-dialect zsh \(shfmtFlags) --diff {{ files }}" }
+    check_list_files {
+      command =
+        """
+        files=$(shfmt --language-dialect zsh \(shfmtFlags) --list {{ files }})
+        if [ -n "$files" ]; then
+        echo "$files"
+        exit 1
+        fi
+        """
+    }
+    fix { command = "shfmt --language-dialect zsh \(shfmtFlags) --write {{ files }}" }
+  }
+
+  // Lua: selene reads selene.toml from its working directory.
+  ["selene"] = (Builtins.selene) {
+    exclude = ".config/nvim/**"
+  }
+  ["selene-nvim"] = (Builtins.selene) {
+    dir = ".config/nvim"
+  }
+  ["stylua"] = Builtins.stylua
+
+  // Data and docs
+  ["tombi"] = Builtins.tombi
+  ["tombi-format"] = Builtins.tombi_format
+  ["ryl"] = Builtins.ryl
+  ["ryl-format"] = Builtins.ryl_format
+  ["biome"] = Builtins.biome
+  ["rumdl"] = (Builtins.rumdl) {
+    // A symlink to AGENTS.md
+    exclude = "CLAUDE.md"
+  }
+  ["rumdl-format"] = (Builtins.rumdl_format) {
+    exclude = "CLAUDE.md"
+  }
+  ["pkl"] = Builtins.pkl
+  ["pkl-format"] = Builtins.pkl_format
+
+  // GitHub Actions
+  ["actionlint"] = Builtins.actionlint
+  ["zizmor"] = Builtins.zizmor
+}
+
+hooks {
+  ["commit-msg"] {
+    steps {
+      ["conventional-commit"] = Builtins.check_conventional_commit
+    }
+  }
+}
