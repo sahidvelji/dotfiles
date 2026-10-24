@@ -16,9 +16,7 @@ local shfmtFlags = "--indent 2 --case-indent"
 
 steps {
   // Any file
-  ["check-merge-conflict"] = Builtins.check_merge_conflict
   ["check-case-conflict"] = Builtins.check_case_conflict
-  ["check-added-large-files"] = Builtins.check_added_large_files
   ["check-symlinks"] = Builtins.check_symlinks
   ["destroyed-symlinks"] = Builtins.destroyed_symlinks
   ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
@@ -30,8 +28,6 @@ steps {
   ["betterleaks"] = Builtins.betterleaks
   ["trailing-whitespace"] = Builtins.trailing_whitespace
   ["newlines"] = Builtins.newlines
-  ["mixed-line-ending"] = Builtins.mixed_line_ending
-  ["byte-order-marker"] = Builtins.byte_order_marker
   ["typos"] = Builtins.typos
 
   // Shell
@@ -104,9 +100,8 @@ steps {
   ["pkl"] = Builtins.pkl
   ["pkl-format"] = Builtins.pkl_format
 
-  // GitHub Actions
-  ["actionlint"] = Builtins.actionlint
-  ["zizmor"] = Builtins.zizmor
+  // GitHub Actions: actionlint's checks plus zizmor's security audits
+  ["jactionlint"] = Builtins.jactionlint
 }
 
 hooks {

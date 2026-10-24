@@ -16,7 +16,7 @@ run = 'brew bundle'
 
 [tools]
 "aqua:Kampfkarren/selene" = "0.32.0"
-"aqua:kjanat/actionlint" = "1.17.0"
+"aqua:jdx/jactionlint" = "2.3.0"
 "aqua:owenlamont/ryl" = "0.26.0"
 betterleaks = "1.9.0"
 biome = "2.6.2"
@@ -28,4 +28,3 @@ shfmt = "3.14.1"
 stylua = "2.6.0"
 tombi = "1.9.1"
 typos = "1.51.1"
-zizmor = "1.31.1"
