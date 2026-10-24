@@ -5,8 +5,9 @@ The repo mirrors `$HOME`;
 `mise dot apply` reads `[dotfiles]` in `.config/mise/config.toml`
 and symlinks each listed source under the repo to its `$HOME` target
 (`mise dot` is the short spelling of `mise bootstrap dotfiles`).
-Homebrew packages stay in `.config/homebrew/Brewfile`
-(managed by `brew bundle --global`).
+Homebrew packages stay in `.config/homebrew/Brewfile`,
+installed with `mise run brew-install`
+and refreshed with `mise run brew-dump`.
 See `README.md` for the user-facing workflow.
 
 Because the entries are symlinks,
