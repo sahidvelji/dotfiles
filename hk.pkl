@@ -94,9 +94,6 @@ steps {
     // A symlink to AGENTS.md
     exclude = "CLAUDE.md"
   }
-  ["rumdl-format"] = (Builtins.rumdl_format) {
-    exclude = "CLAUDE.md"
-  }
   ["pkl"] = Builtins.pkl
   ["pkl-format"] = Builtins.pkl_format
 
