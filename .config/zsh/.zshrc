@@ -6,11 +6,11 @@ path=($homebrew_path $path)
 fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 
 # Shell Options
-setopt autocd # Automatically cd into typed directory.
+setopt autocd         # Automatically cd into typed directory.
 unsetopt FLOW_CONTROL # Disable ctrl-s to freeze terminal (builtin; no stty fork).
 setopt interactive_comments
-setopt EXTENDED_GLOB               # Enable ** ~ ^ glob operators
-unsetopt NOMATCH                   # Pass unmatched globs through (like bash)
+setopt EXTENDED_GLOB # Enable ** ~ ^ glob operators
+unsetopt NOMATCH     # Pass unmatched globs through (like bash)
 
 # History
 HISTSIZE=10000000
@@ -21,18 +21,24 @@ HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 [[ -d "${HISTFILE:h}" ]] || mkdir -p "${HISTFILE:h}"
 setopt HIST_IGNORE_DUPS
 setopt HIST_FIND_NO_DUPS
-setopt HIST_EXPIRE_DUPS_FIRST  # Trim duplicates first when history is full
-setopt SHARE_HISTORY           # Share history across concurrent sessions
-setopt EXTENDED_HISTORY        # Timestamp + duration; SHARE_HISTORY alone does not write these
-setopt HIST_FCNTL_LOCK         # fcntl locking, safer with concurrent SHARE_HISTORY writers
-setopt HIST_REDUCE_BLANKS          # Remove extra blanks from commands
-setopt HIST_VERIFY                 # Show expanded history before executing (!! safety)
+setopt HIST_EXPIRE_DUPS_FIRST # Trim duplicates first when history is full
+setopt SHARE_HISTORY          # Share history across concurrent sessions
+setopt EXTENDED_HISTORY       # Timestamp + duration; SHARE_HISTORY alone does not write these
+setopt HIST_FCNTL_LOCK        # fcntl locking, safer with concurrent SHARE_HISTORY writers
+setopt HIST_REDUCE_BLANKS     # Remove extra blanks from commands
+setopt HIST_VERIFY            # Show expanded history before executing (!! safety)
 
 # `noexpand` declares an alias that is configuration rather than shorthand, so
 # the expansion widget below leaves it alone. Marking it beside the alias keeps
 # the two from drifting apart.
 _globalias_skip=()
-noexpand() { local s; for s in "$@"; do _globalias_skip+=${s%%=*}; alias -- "$s"; done }
+noexpand() {
+  local s
+  for s in "$@"; do
+    _globalias_skip+=${s%%=*}
+    alias -- "$s"
+  done
+}
 
 [ -f "$ZDOTDIR/aliases.zsh" ] && source "$ZDOTDIR/aliases.zsh"
 
@@ -48,7 +54,7 @@ noexpand() { local s; for s in "$@"; do _globalias_skip+=${s%%=*}; alias -- "$s"
       dir=${(e)rest}
       alias -- "$key=cd $dir && ll"
       hash -d -- "$key=$dir"
-    done < "$ZDOTDIR/bm-dirs"
+    done <"$ZDOTDIR/bm-dirs"
   fi
   if [[ -r "$ZDOTDIR/bm-files" ]]; then
     while IFS=$' \t' read -r key rest; do
@@ -57,7 +63,7 @@ noexpand() { local s; for s in "$@"; do _globalias_skip+=${s%%=*}; alias -- "$s"
       dir=${(e)rest}
       alias -- "$key=$EDITOR $dir"
       hash -d -- "$key=$dir"
-    done < "$ZDOTDIR/bm-files"
+    done <"$ZDOTDIR/bm-files"
   fi
 }
 
@@ -74,7 +80,7 @@ zstyle ':completion:*' menu no
 # alone, which would keep it "stale" and send every shell down the slow path.
 _zcompdump="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 [[ -d "${_zcompdump:h}" ]] || mkdir -p "${_zcompdump:h}"
-_zcompdump_stale=( ${_zcompdump}(#qN.mh+24) )
+_zcompdump_stale=(${_zcompdump}(#qN.mh+24))
 if [[ ! -s $_zcompdump || ${#_zcompdump_stale} -gt 0 ]]; then
   compinit -i -d "$_zcompdump" && touch "$_zcompdump"
 else
@@ -94,27 +100,28 @@ bindkey -v
 export KEYTIMEOUT=1
 
 # Change cursor shape for different vi modes.
-function zle-keymap-select () {
-    case $KEYMAP in
-        vicmd) echo -ne '\e[2 q';;      # block
-        viins|main) echo -ne '\e[6 q';; # beam
-    esac
+function zle-keymap-select() {
+  case $KEYMAP in
+    vicmd) echo -ne '\e[2 q' ;;        # block
+    viins | main) echo -ne '\e[6 q' ;; # beam
+  esac
 }
 zle -N zle-keymap-select
 zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[6 q"
+  zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+  echo -ne "\e[6 q"
 }
 zle -N zle-line-init
 echo -ne '\e[6 q' # Use beam shape cursor on startup.
 # Hand external commands the terminal's default cursor (block); zle-line-init
 # restores the beam at the next prompt. Ghostty's own `cursor` integration is
 # off (no-cursor), so this block is the only thing shaping the cursor.
-preexec() { echo -ne '\e[0 q' ;}
+preexec() { echo -ne '\e[0 q'; }
 
 # Key Bindings
 bindkey -s "^p" "..\n"
-autoload edit-command-line; zle -N edit-command-line
+autoload edit-command-line
+zle -N edit-command-line
 bindkey '^e' edit-command-line
 
 # Expand aliases in place on Space and Enter, so $HISTFILE gets the real command.
@@ -122,16 +129,22 @@ bindkey '^e' edit-command-line
 _globalias_expand() {
   [[ $LBUFFER == *[[:alnum:]] ]] || return
   local word=${${(Az)LBUFFER}[-1]}
-  (( $_globalias_skip[(Ie)$word] )) && return
+  (($_globalias_skip[(Ie)$word])) && return
   zle _expand_alias
 }
-globalias()        { _globalias_expand; zle self-insert }
-globalias-accept() { _globalias_expand; zle accept-line }
+globalias() {
+  _globalias_expand
+  zle self-insert
+}
+globalias-accept() {
+  _globalias_expand
+  zle accept-line
+}
 zle -N globalias
 zle -N globalias-accept
-bindkey -M viins ' '  globalias
-bindkey -M viins '^ ' magic-space       # Ctrl-Space = literal space; terminals
-bindkey -M viins '^@' magic-space       # send it as either ^ space or NUL
+bindkey -M viins ' ' globalias
+bindkey -M viins '^ ' magic-space # Ctrl-Space = literal space; terminals
+bindkey -M viins '^@' magic-space # send it as either ^ space or NUL
 bindkey -M viins '^M' globalias-accept
 bindkey -M vicmd '^M' globalias-accept
 
@@ -147,23 +160,23 @@ bindkey '^f' fzf-cd-widget
 
 # Cached Tool Initialization
 _cached_source() {
-    local name="$1"
-    shift
-    local cmd="$1"
-    local cache="$XDG_CACHE_HOME/zsh/init/${name}.zsh"
-    local bin_path="${commands[$cmd]}"
+  local name="$1"
+  shift
+  local cmd="$1"
+  local cache="$XDG_CACHE_HOME/zsh/init/${name}.zsh"
+  local bin_path="${commands[$cmd]}"
 
-    # Regenerate if cache is missing, empty, or older than the binary
-    if [[ ! -s "$cache" || "$bin_path" -nt "$cache" ]]; then
-        mkdir -p "${cache:h}"
-        "$@" > "$cache" 2>/dev/null
-    fi
+  # Regenerate if cache is missing, empty, or older than the binary
+  if [[ ! -s "$cache" || "$bin_path" -nt "$cache" ]]; then
+    mkdir -p "${cache:h}"
+    "$@" >"$cache" 2>/dev/null
+  fi
 
-    source "$cache"
+  source "$cache"
 }
 
-(( $+commands[starship] )) && _cached_source starship starship init zsh
-(( $+commands[zoxide] ))   && _cached_source zoxide zoxide init zsh
+(($+commands[starship])) && _cached_source starship starship init zsh
+(($+commands[zoxide])) && _cached_source zoxide zoxide init zsh
 
 [ -f /opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh ] && source /opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh
 
@@ -189,4 +202,4 @@ bindkey -M vicmd 'j' history-substring-search-down
 # NOT cached: `mise activate zsh` embeds a snapshot of the live $PATH in its
 # output, so a cached copy replays a stale PATH and wipes the prefix set in
 # ~/.zshenv (~/.local/bin, go/cargo bins).
-(( $+commands[mise] )) && eval "$(mise activate zsh)"
+(($+commands[mise])) && eval "$(mise activate zsh)"

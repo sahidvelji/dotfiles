@@ -64,7 +64,7 @@
 	helper = ""
 
 [credential "https://github.com"]
-	helper = 
+	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
 
 [core]

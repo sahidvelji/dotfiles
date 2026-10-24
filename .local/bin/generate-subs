@@ -67,7 +67,7 @@ END {
   print "</plist>"
   printf "Generated %d entries\n", n > "/dev/stderr"
 }
-' "$SUBS_CSV" > "$OUT_PLIST"
+' "$SUBS_CSV" >"$OUT_PLIST"
 
 echo "Wrote $OUT_PLIST"
 echo "Import: System Settings > Keyboard > Text Replacements, then drag the file in."

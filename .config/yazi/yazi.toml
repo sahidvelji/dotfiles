@@ -10,10 +10,10 @@ tab_size = 4
 
 [opener]
 pdf = [
-	{ run = 'tdf %s', block = true, desc = "Open in tdf", for = "unix" },
+  { run = 'tdf %s', block = true, desc = "Open in tdf", for = "unix" },
 ]
 
 [open]
 prepend_rules = [
-	{ mime = "application/pdf", use = "pdf" },
+  { mime = "application/pdf", use = "pdf" },
 ]
