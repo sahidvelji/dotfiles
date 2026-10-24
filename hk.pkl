@@ -24,7 +24,6 @@ steps {
     // Sourced by zsh, not run; the shebang only names the shell.
     exclude = List(".zshenv", ".config/zsh/aliasrc")
   }
-  ["detect-private-key"] = Builtins.detect_private_key
   ["betterleaks"] = Builtins.betterleaks
   ["trailing-whitespace"] = Builtins.trailing_whitespace
   ["newlines"] = Builtins.newlines
