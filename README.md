@@ -8,8 +8,7 @@ and Homebrew (system packages).
 
 - Each top-level directory is a mise
   [dotfile group](https://mise.jdx.dev/dotfiles/groups.html)
-  deployed into the matching dot-directory —
-  e.g. `repo/config/ghostty/config` maps to `~/.config/ghostty/config`:
+  deployed into the matching dot-directory:
 
   | Repo               | Target                 |
   | ------------------ | ---------------------- |
@@ -32,9 +31,13 @@ and Homebrew (system packages).
   and `config/mise/tasks/` holds global tasks that run from anywhere
 - `hk.pkl` lints and formats every commit
 
-The dotfiles and bootstrap config is project config,
-so run `mise dot` and `mise bootstrap` from the repo,
+Run mise from the repo root,
 or from anywhere with `mise -C ~/repos/dotfiles`.
+The dotfiles and bootstrap config is project config,
+so elsewhere `mise dot add` would not see the groups
+and would move a file into `~/.dotfiles` with an entry in the global config.
+Under `config/`, mise also reads the global config and its tasks
+as project config.
 
 `mise dot` is the short spelling of `mise dotfiles` / `mise bootstrap dotfiles`.
 
@@ -74,24 +77,14 @@ A file under `~/.config`, `~/.local` or `~/.claude`
 belongs to that directory's group,
 so `mise dot add` moves it into the group (`config/ghostty/config`)
 and links it back, without a new config entry.
-Run it from the repo:
-elsewhere mise does not see the groups,
-so it would move the file into `~/.dotfiles`
-and write an entry for it into the global config,
-`config/mise/config.toml`.
 
 A new top-level dotfile matches no group.
 Give it a dotless source and write the entry to the repo's `mise.toml`:
 
 ```bash
+# mise 2026.10.18 links a relative --source as written; the apply repoints it
 mise dot add --local --source foo ~/.foo && mise dot apply
 ```
-
-Run it from the repo root.
-mise 2026.10.18 moves the file relative to the current directory
-but links a relative `--source` as written,
-so `~/.foo` points at `foo` beside it
-until the `mise dot apply` repoints it.
 
 A group keeps source names as they are,
 so a new dotfile nested inside one,
@@ -202,9 +195,6 @@ they are only visible from inside it.
 `config/mise/tasks/` holds global file tasks,
 symlinked into `~/.config/mise/tasks/`,
 so they run from any directory.
-Under `config/` mise also reads them,
-and `config/mise/config.toml`, as project config,
-so run mise from the repo root.
 
 ```bash
 mise run repos-tidy                       # tidy the repo you are standing in

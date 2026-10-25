@@ -6,16 +6,15 @@ output = "interleave"
 [settings.dotfiles]
 root = "~/repos/dotfiles"
 
-# Each group walks its root and links every leaf file into the target (mode
-# symlink-each, the group default), so unmanaged peers in ~/.config, ~/.local
-# and ~/.claude are left alone. `mise dot add ~/.config/foo` routes the file
-# into config/foo without writing an entry.
+# Each group links every leaf file into its target, so unmanaged peers there
+# are left alone.
 [dotfile_groups.config]
 root = "config"
 target = "~/.config"
 
 # The one nested dotfile. The walk skips an entry's source, so zshrc is not
-# also linked as ~/.config/zsh/zshrc.
+# also linked as ~/.config/zsh/zshrc. hk.pkl and .editorconfig list the zsh
+# startup files too.
 [dotfile_groups.config.entries]
 "~/.config/zsh/.zshrc" = { source = "zsh/zshrc" }
 
@@ -31,8 +30,7 @@ target = "~/.claude"
 
 [dotfiles]
 # ~/.zshenv is the zsh bootstrap: it sets ZDOTDIR + XDG so the rest of the
-# config loads from ~/.config/zsh. Managed here so `mise bootstrap` reproduces
-# it on a fresh machine.
+# config loads from ~/.config/zsh.
 "~/.zshenv" = "zshenv"
 
 [bootstrap.user]
