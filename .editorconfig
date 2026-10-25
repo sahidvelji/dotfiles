@@ -1,11 +1,7 @@
 root = true
 
-# shfmt reads these instead of flags; switch_case_indent is shfmt's own key.
+# shfmt reads these instead of flags.
 [*]
 indent_style = space
 indent_size = 2
 switch_case_indent = true
-
-# git writes its config with tabs.
-[.config/git/config]
-indent_style = tab
