@@ -76,13 +76,34 @@ so `mise dot add` moves it into the group (`config/ghostty/config`)
 and links it back, without a new config entry.
 Run it from the repo:
 elsewhere mise does not see the groups,
-and would move the file into `~/.dotfiles` instead.
+so it would move the file into `~/.dotfiles`
+and write an entry for it into the global config,
+`config/mise/config.toml`.
 
 A new top-level dotfile matches no group.
 Give it a dotless source and write the entry to the repo's `mise.toml`:
 
 ```bash
-mise dot add --local --source foo ~/.foo
+mise dot add --local --source ~/repos/dotfiles/foo ~/.foo
+```
+
+Keep the source absolute:
+mise 2026.10.18 links a relative `--source` as written,
+so `~/.foo` would point at `foo` beside it
+until the next `mise dot apply`
+([#25](https://github.com/sahidvelji/dotfiles/issues/25)).
+
+A group keeps source names as they are,
+so a new dotfile nested inside one,
+such as `~/.config/zsh/.zprofile`,
+would land in the repo with its dot.
+Move it to a dotless name under the group instead,
+declare it like `.zshrc` under `[dotfile_groups.config.entries]`
+in `mise.toml`,
+and run `mise dot apply`:
+
+```toml
+"~/.config/zsh/.zprofile" = { source = "zsh/zprofile" }
 ```
 
 ## Checking state
@@ -101,18 +122,19 @@ so editing `~/.config/ghostty/config` edits the repo copy directly.
 
 ## Untracking a dotfile
 
-Delete the source from the repo, then prune its link:
+Delete the source from the repo, then apply:
 
 ```bash
 git rm config/ghostty/config
-mise dot apply --prune
+mise dot apply
 ```
 
-`--prune` removes links whose source is gone,
-after asking,
-and only while they still point at the source mise linked.
+A group links each file,
+so the next apply removes the link of a deleted source.
 For an entry in `[dotfiles]`,
 run `mise dot unapply <target>` before removing the entry.
+After removing a whole group,
+`mise dot apply --prune` removes the files it left behind.
 
 ## macOS settings
 

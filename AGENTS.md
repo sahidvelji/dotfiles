@@ -24,7 +24,8 @@ Global agent instructions live in `claude/CLAUDE.md`,
 symlinked to `~/.claude/CLAUDE.md`.
 
 `config/mise/config.toml` is the global mise config.
-mise also reads it as project config, and `config/mise/tasks/` as project tasks,
+mise also reads it as project config,
+and `config/mise/tasks/` as project tasks,
 whenever the working directory is under `config/`,
 so run mise commands from the repo root.
 

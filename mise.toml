@@ -1,9 +1,8 @@
 [settings.task]
 output = "interleave"
 
-# Group roots resolve from here, not from this file's directory. Hard-coded
-# because `mise dot add` outside the repo would otherwise fall back to
-# ~/.dotfiles.
+# Group roots resolve from here, not from this file's directory. Absolute
+# because a relative root resolves from the current directory, not this file.
 [settings.dotfiles]
 root = "~/repos/dotfiles"
 
