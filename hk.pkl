@@ -14,8 +14,6 @@ exclude =
     // lazy.nvim and LazyVim write these; keep them as generated.
     ".config/nvim/lazy-lock.json",
     ".config/nvim/lazyvim.json",
-    // A symlink to AGENTS.md, which every step already sees.
-    "CLAUDE.md",
   )
 
 steps {
