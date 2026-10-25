@@ -6,14 +6,14 @@ import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.
 local zsh =
   List(
     new FileSelector { types = List("zsh") },
-    new FileSelector { glob = List(".zshenv", ".config/zsh/.z*") },
+    new FileSelector { glob = List("zshenv", "config/zsh/zshrc") },
   )
 
 exclude =
   List(
     // lazy.nvim and LazyVim write these; keep them as generated.
-    ".config/nvim/lazy-lock.json",
-    ".config/nvim/lazyvim.json",
+    "config/nvim/lazy-lock.json",
+    "config/nvim/lazyvim.json",
   )
 
 steps {
@@ -33,8 +33,8 @@ steps {
   // Shell
   ["shellcheck"] = Builtins.shellcheck
   ["shfmt"] = (Builtins.shfmt) {
-    // shfmt picks the zsh dialect from the file name or shebang,
-    // and its formatting options from .editorconfig.
+    // shfmt reads its formatting options from .editorconfig, and the zsh
+    // dialect from there too for the startup files, whose names give no hint.
     match_any = Builtins.shfmt.match_any + zsh
   }
 
@@ -53,10 +53,10 @@ steps {
 
   // Lua: selene reads selene.toml from its working directory.
   ["selene"] = (Builtins.selene) {
-    exclude = ".config/nvim/**"
+    exclude = "config/nvim/**"
   }
   ["selene-nvim"] = (Builtins.selene) {
-    dir = ".config/nvim"
+    dir = "config/nvim"
   }
   ["stylua"] = Builtins.stylua
 

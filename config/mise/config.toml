@@ -1,0 +1,16 @@
+# Dotfiles and bootstrap are declared in the repo's mise.toml, not here: run
+# `mise dot` and `mise bootstrap` from ~/repos/dotfiles.
+
+# gh keeps its token in the macOS Keychain, where mise cannot read it, so ask gh
+# when mise needs one.
+[settings.github]
+credential_command = "gh auth token"
+
+[task_config]
+dir = "{{cwd}}"
+
+[tools]
+"github:open-feature/cli" = "latest"
+"github:seachicken/gh-poi" = { version = "latest", bin = "gh-poi" }
+"go:golang.org/x/tools/cmd/deadcode" = "latest"
+"go:golang.org/x/vuln/cmd/govulncheck" = "latest"

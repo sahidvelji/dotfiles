@@ -1,22 +1,32 @@
 # dotfiles
 
 Dotfiles managed with mise.
-The repo mirrors `$HOME`;
-`mise dot apply` reads `[dotfiles]` in `.config/mise/config.toml`
-and symlinks each listed source under the repo to its `$HOME` target
+Each top-level directory is a mise dotfile group
+deployed into the matching dot-directory of `$HOME`:
+`config/` into `~/.config`, `local/` into `~/.local`,
+and `claude/` into `~/.claude`.
+`zshenv` and `config/zsh/zshrc` deploy as `~/.zshenv`
+and `~/.config/zsh/.zshrc`.
+The groups, `[dotfiles]` and `[bootstrap]` live in the repo's `mise.toml`,
+so `mise dot` and `mise bootstrap` commands must run from the repo
 (`mise dot` is the short spelling of `mise bootstrap dotfiles`).
-Homebrew packages stay in `.config/homebrew/Brewfile`,
+Homebrew packages stay in `config/homebrew/Brewfile`,
 installed with `mise run brew-install`
 and refreshed with `mise run brew-dump`.
 See `README.md` for the user-facing workflow.
 
-Because the entries are symlinks,
-editing a file under the repo (e.g. `.config/nvim/init.lua`)
+Because the groups symlink each file,
+editing a file under the repo (e.g. `config/nvim/init.lua`)
 changes the live config immediately — no apply step.
 Only *new* files need `mise dot apply`
 before they exist in `$HOME`.
-Global agent instructions live in `.claude/CLAUDE.md`,
+Global agent instructions live in `claude/CLAUDE.md`,
 symlinked to `~/.claude/CLAUDE.md`.
+
+`config/mise/config.toml` is the global mise config.
+mise also reads it as project config, and `config/mise/tasks/` as project tasks,
+whenever the working directory is under `config/`,
+so run mise commands from the repo root.
 
 ## Linting
 
