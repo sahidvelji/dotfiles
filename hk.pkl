@@ -32,6 +32,8 @@ steps {
   // Shell
   ["shellcheck"] = Builtins.shellcheck
   ["shfmt"] = (Builtins.shfmt) {
+    // shfmt picks the zsh dialect from the file name or shebang.
+    match_any = Builtins.shfmt.match_any + zsh
     check_diff { command = "shfmt \(shfmtFlags) --diff --apply-ignore {{ files }}" }
     check_list_files {
       command =
@@ -57,21 +59,6 @@ steps {
       done
       exit $failed
       """
-  }
-  ["shfmt-zsh"] = (Builtins.shfmt) {
-    match_any = zsh
-    check_diff { command = "shfmt --language-dialect zsh \(shfmtFlags) --diff {{ files }}" }
-    check_list_files {
-      command =
-        """
-        files=$(shfmt --language-dialect zsh \(shfmtFlags) --list {{ files }})
-        if [ -n "$files" ]; then
-        echo "$files"
-        exit 1
-        fi
-        """
-    }
-    fix { command = "shfmt --language-dialect zsh \(shfmtFlags) --write {{ files }}" }
   }
 
   // Lua: selene reads selene.toml from its working directory.
