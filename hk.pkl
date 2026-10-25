@@ -6,11 +6,17 @@ import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.
 local zsh =
   List(
     new FileSelector { types = List("zsh") },
-    new FileSelector { glob = List(".zshenv", ".config/zsh/.zshrc") },
+    new FileSelector { glob = List(".zshenv", ".config/zsh/.z*") },
   )
 
-// lazy.nvim and LazyVim write these; keep them as generated.
-exclude = List(".config/nvim/lazy-lock.json", ".config/nvim/lazyvim.json")
+exclude =
+  List(
+    // lazy.nvim and LazyVim write these; keep them as generated.
+    ".config/nvim/lazy-lock.json",
+    ".config/nvim/lazyvim.json",
+    // A symlink to AGENTS.md, which every step already sees.
+    "CLAUDE.md",
+  )
 
 steps {
   // Any file
@@ -60,10 +66,7 @@ steps {
   ["ryl"] = Builtins.ryl
   ["ryl-format"] = Builtins.ryl_format
   ["biome"] = Builtins.biome
-  ["rumdl"] = (Builtins.rumdl) {
-    // A symlink to AGENTS.md
-    exclude = "CLAUDE.md"
-  }
+  ["rumdl"] = Builtins.rumdl
   ["pkl-format"] = Builtins.pkl_format
 
   // GitHub Actions: actionlint's checks plus zizmor's security audits

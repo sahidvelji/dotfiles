@@ -3,5 +3,6 @@ toml-version = "v1.0.0"
 [format.rules]
 # Single quotes mark strings that hold shell commands or format strings.
 string-quote-style = "preserve"
-# Line up trailing comments, as .config/mise/config.toml does.
+# Line up each table's trailing comments in one column,
+# set by the table's longest line.
 trailing-comment-alignment = true
