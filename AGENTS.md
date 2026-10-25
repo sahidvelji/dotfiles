@@ -20,9 +20,9 @@ symlinked to `~/.claude/CLAUDE.md`.
 
 ## Linting
 
-`hk.pkl` lints and formats each commit through the global git hooks.
-Run `hk check --all` after editing,
-and `hk fix --all` to apply the formatters.
+The pre-commit hook runs `hk.pkl`'s linters and formatters on staged files,
+so a commit may restage reformatted files or fail on a lint error.
+Fix the cause rather than skipping the hook with `HK=0` or `--no-verify`.
 
 ## Git
 
