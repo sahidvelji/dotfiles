@@ -6,6 +6,11 @@ root = "~/repos/dotfiles"
 # live alongside managed entries.
 default_mode = "symlink-each"
 
+# gh keeps its token in the macOS Keychain, where mise cannot read it, so ask gh
+# when mise needs one. CI sets GITHUB_TOKEN, which mise checks first.
+[settings.github]
+credential_command = "gh auth token"
+
 [dotfiles]
 # Sources are implied from the home-relative target under dotfiles.root, so
 # `~/.config` resolves source = ~/repos/dotfiles/.config.
