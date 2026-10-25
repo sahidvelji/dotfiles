@@ -2,11 +2,11 @@ amends "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Config.pk
 
 import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.pkl"
 
-// hk tags `.zshenv` and `aliasrc` as zsh from their shebangs; `.zshrc` has none.
+// hk tags `*.zsh` files as zsh but not the startup files, which have no extension.
 local zsh =
   List(
     new FileSelector { types = List("zsh") },
-    new FileSelector { glob = List(".config/zsh/.zshrc") },
+    new FileSelector { glob = List(".zshenv", ".config/zsh/.zshrc") },
   )
 
 // lazy.nvim and LazyVim write these; keep them as generated.
@@ -20,10 +20,7 @@ steps {
   ["check-symlinks"] = Builtins.check_symlinks
   ["destroyed-symlinks"] = Builtins.destroyed_symlinks
   ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
-  ["check-shebang-scripts-are-executable"] = (Builtins.check_shebang_scripts_are_executable) {
-    // Sourced by zsh, not run; the shebang only names the shell.
-    exclude = List(".zshenv", ".config/zsh/aliasrc")
-  }
+  ["check-shebang-scripts-are-executable"] = Builtins.check_shebang_scripts_are_executable
   ["betterleaks"] = Builtins.betterleaks
   ["trailing-whitespace"] = Builtins.trailing_whitespace
   ["newlines"] = Builtins.newlines
