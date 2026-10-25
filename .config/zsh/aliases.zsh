@@ -111,7 +111,10 @@ s() {
 # `gh pr view` accepts (URL, number inside a repo); falls back to the clipboard.
 review-pr() {
   local input="${1:-$(pbpaste)}"
-  [ -n "$input" ] || { print -u2 "review-pr: no PR given and the clipboard is empty"; return 1; }
+  [ -n "$input" ] || {
+    print -u2 "review-pr: no PR given and the clipboard is empty"
+    return 1
+  }
 
   # gh resolves any accepted form to the base repo's canonical URL, so a
   # cross-fork PR still resolves to the upstream owner/repo.

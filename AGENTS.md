@@ -18,6 +18,12 @@ before they exist in `$HOME`.
 Global agent instructions live in `.claude/CLAUDE.md`,
 symlinked to `~/.claude/CLAUDE.md`.
 
+## Linting
+
+The pre-commit hook runs `hk.pkl`'s linters and formatters on staged files,
+so a commit may restage reformatted files or fail on a lint error.
+Fix the cause rather than skipping the hook with `HK=0` or `--no-verify`.
+
 ## Git
 
 Commit and push to `main` directly.

@@ -1,0 +1,23 @@
+# yamllint's default rules, minus the ones the formatter settles.
+[lint.rules]
+anchors = "enable"
+braces = "enable"
+brackets = "enable"
+colons = "enable"
+commas = "enable"
+comments = { level = "warning" }
+comments-indentation = { level = "warning" }
+empty-lines = "enable"
+hyphens = "enable"
+indentation = "enable"
+key-duplicates = "enable"
+line-length = "enable"
+new-line-at-end-of-file = "enable"
+new-lines = "enable"
+trailing-spaces = "enable"
+# GitHub workflows use `on:` as a key.
+truthy = { level = "warning", check-keys = false }
+
+[format]
+# Leave quoting as written: gh and lazygit write double quotes.
+quote-style = "preserve"

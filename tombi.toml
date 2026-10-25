@@ -1,0 +1,5 @@
+toml-version = "v1.0.0"
+
+[format.rules]
+# Single quotes mark strings that hold shell commands or format strings.
+string-quote-style = "preserve"

@@ -1,0 +1,82 @@
+amends "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Config.pkl"
+
+import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.pkl"
+
+// hk tags `*.zsh` files as zsh but not the startup files, which have no extension.
+local zsh =
+  List(
+    new FileSelector { types = List("zsh") },
+    new FileSelector { glob = List(".zshenv", ".config/zsh/.z*") },
+  )
+
+exclude =
+  List(
+    // lazy.nvim and LazyVim write these; keep them as generated.
+    ".config/nvim/lazy-lock.json",
+    ".config/nvim/lazyvim.json",
+  )
+
+steps {
+  // Any file
+  ["check-symlinks"] = Builtins.check_symlinks
+  ["destroyed-symlinks"] = Builtins.destroyed_symlinks
+  ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
+  ["check-shebang-scripts-are-executable"] = Builtins.check_shebang_scripts_are_executable
+  ["betterleaks"] = Builtins.betterleaks
+  ["trailing-whitespace"] = (Builtins.trailing_whitespace) {
+    // Two trailing spaces are a Markdown line break; rumdl handles whitespace there.
+    exclude = "**/*.md"
+  }
+  ["newlines"] = Builtins.newlines
+  ["typos"] = Builtins.typos
+
+  // Shell
+  ["shellcheck"] = Builtins.shellcheck
+  ["shfmt"] = (Builtins.shfmt) {
+    // shfmt picks the zsh dialect from the file name or shebang,
+    // and its formatting options from .editorconfig.
+    match_any = Builtins.shfmt.match_any + zsh
+  }
+
+  // Zsh: shellcheck does not support it, so `zsh --no-exec` checks that it parses.
+  ["zsh-syntax"] = new Step {
+    match_any = zsh
+    check =
+      """
+      failed=0
+      for f in {{ files }}; do
+      zsh --no-exec "$f" || failed=1
+      done
+      exit $failed
+      """
+  }
+
+  // Lua: selene reads selene.toml from its working directory.
+  ["selene"] = (Builtins.selene) {
+    exclude = ".config/nvim/**"
+  }
+  ["selene-nvim"] = (Builtins.selene) {
+    dir = ".config/nvim"
+  }
+  ["stylua"] = Builtins.stylua
+
+  // Data and docs
+  ["tombi"] = Builtins.tombi
+  ["tombi-format"] = Builtins.tombi_format
+  ["ryl"] = Builtins.ryl
+  ["ryl-format"] = Builtins.ryl_format
+  ["biome"] = Builtins.biome
+  ["rumdl"] = Builtins.rumdl
+  ["pkl-format"] = Builtins.pkl_format
+
+  // GitHub Actions: actionlint's checks plus zizmor's security audits
+  ["jactionlint"] = Builtins.jactionlint
+}
+
+hooks {
+  ["commit-msg"] {
+    steps {
+      ["conventional-commit"] = Builtins.check_conventional_commit
+    }
+  }
+}

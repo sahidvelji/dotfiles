@@ -17,9 +17,15 @@ MAXW=99
 
 json=$(cat)
 
-RESET="\033[0m"; DIM="\033[2m"
-CYAN="\033[36m"; BLUE="\033[34m"; YELLOW="\033[33m"
-GREEN="\033[32m"; MAGENTA="\033[35m"; RED="\033[31m"; GREY="\033[90m"
+RESET="\033[0m"
+DIM="\033[2m"
+CYAN="\033[36m"
+BLUE="\033[34m"
+YELLOW="\033[33m"
+GREEN="\033[32m"
+MAGENTA="\033[35m"
+RED="\033[31m"
+GREY="\033[90m"
 
 if command -v jq >/dev/null 2>&1; then
   # One jq invocation, not fifteen: this runs on every render.
@@ -35,11 +41,17 @@ if command -v jq >/dev/null 2>&1; then
       (.rate_limits.seven_day.resets_at // ""),
       (.cost.total_cost_usd // "") ] | .[] | tostring' 2>/dev/null)
   {
-    IFS= read -r model_name; IFS= read -r cwd
-    IFS= read -r agent_name; IFS= read -r wt_name
-    IFS= read -r ctx_pct;    IFS= read -r ctx_tok;  IFS= read -r ctx_max
-    IFS= read -r rl_5h;      IFS= read -r rl_5h_reset
-    IFS= read -r rl_7d;      IFS= read -r rl_7d_reset
+    IFS= read -r model_name
+    IFS= read -r cwd
+    IFS= read -r agent_name
+    IFS= read -r wt_name
+    IFS= read -r ctx_pct
+    IFS= read -r ctx_tok
+    IFS= read -r ctx_max
+    IFS= read -r rl_5h
+    IFS= read -r rl_5h_reset
+    IFS= read -r rl_7d
+    IFS= read -r rl_7d_reset
     IFS= read -r cost
   } <<VALS_EOF
 $vals
@@ -53,8 +65,8 @@ fi
 
 case "$cwd" in
   "$HOME"/*) dir_full="~${cwd#"$HOME"}" ;;
-  "$HOME")   dir_full="~" ;;
-  *)         dir_full="$cwd" ;;
+  "$HOME") dir_full="~" ;;
+  *) dir_full="$cwd" ;;
 esac
 dir_base=${dir_full##*/}
 
@@ -101,9 +113,11 @@ fi
 
 int_of() { printf '%.0f' "$1" 2>/dev/null; }
 fmt_tokens() {
-  case "$1" in ''|*[!0-9]*) return 0 ;; esac
-  if   [ "$1" -ge 1000000 ]; then printf '%dM' "$(( $1 / 1000000 ))"
-  elif [ "$1" -ge 1000 ];    then printf '%dk' "$(( $1 / 1000 ))"
+  case "$1" in '' | *[!0-9]*) return 0 ;; esac
+  if [ "$1" -ge 1000000 ]; then
+    printf '%dM' "$(($1 / 1000000))"
+  elif [ "$1" -ge 1000 ]; then
+    printf '%dk' "$(($1 / 1000))"
   else printf '%d' "$1"; fi
 }
 
@@ -113,47 +127,76 @@ now=$(date +%s)
 fmt_reset() {
   [ -n "$1" ] || return 0
   case "$1" in *[!0-9]*) return 0 ;; esac
-  delta=$(( $1 - now ))
+  delta=$(($1 - now))
   [ "$delta" -gt 0 ] || return 0
-  d=$(( delta / 86400 )); h=$(( delta % 86400 / 3600 )); m=$(( delta % 3600 / 60 ))
-  if   [ "$d" -gt 0 ]; then printf '%dd%dh' "$d" "$h"
-  elif [ "$h" -gt 0 ]; then printf '%dh%dm' "$h" "$m"
-  elif [ "$m" -gt 0 ]; then printf '%dm' "$m"
+  d=$((delta / 86400))
+  h=$((delta % 86400 / 3600))
+  m=$((delta % 3600 / 60))
+  if [ "$d" -gt 0 ]; then
+    printf '%dd%dh' "$d" "$h"
+  elif [ "$h" -gt 0 ]; then
+    printf '%dh%dm' "$h" "$m"
+  elif [ "$m" -gt 0 ]; then
+    printf '%dm' "$m"
   else printf '<1m'; fi
 }
 
 # add <row-var-suffix> <colored text> <visible columns>
 add() {
   case "$1" in
-    1) [ -n "$row1" ] && { row1="${row1}${DIM} · ${RESET}"; w1=$(( w1 + 3 )); }
-       row1="${row1}$2"; w1=$(( w1 + $3 )) ;;
-    2) [ -n "$row2" ] && { row2="${row2}${DIM} · ${RESET}"; w2=$(( w2 + 3 )); }
-       row2="${row2}$2"; w2=$(( w2 + $3 )) ;;
+    1)
+      [ -n "$row1" ] && {
+        row1="${row1}${DIM} · ${RESET}"
+        w1=$((w1 + 3))
+      }
+      row1="${row1}$2"
+      w1=$((w1 + $3))
+      ;;
+    2)
+      [ -n "$row2" ] && {
+        row2="${row2}${DIM} · ${RESET}"
+        w2=$((w2 + 3))
+      }
+      row2="${row2}$2"
+      w2=$((w2 + $3))
+      ;;
   esac
 }
 
 # ---- row 1 -----------------------------------------------------------------
 # Degrade order: worktree -> shorten dir -> drop agent -> trim branch
-r1_wt=1; r1_dir=1; r1_agent=1
+r1_wt=1
+r1_dir=1
+r1_agent=1
 build_row1() {
-  row1=""; w1=0
+  row1=""
+  w1=0
   [ -n "$model_name" ] && add 1 "${CYAN}${model_name}${RESET}" "${#model_name}"
   if [ "$r1_dir" = 1 ]; then
     add 1 "${BLUE}${dir_full}${RESET}" "${#dir_full}"
   else
-    add 1 "${BLUE}…/${dir_base}${RESET}" "$(( ${#dir_base} + 2 ))"
+    add 1 "${BLUE}…/${dir_base}${RESET}" "$((${#dir_base} + 2))"
   fi
   [ -n "$branch" ] && add 1 "${YELLOW}${branch}${RESET}" "${#branch}"
-  [ -n "$wt_name" ] && [ "$r1_wt" = 1 ] && add 1 "${GREY}wt:${wt_name}${RESET}" "$(( ${#wt_name} + 3 ))"
-  [ -n "$agent_name" ] && [ "$r1_agent" = 1 ] && add 1 "${MAGENTA}@${agent_name}${RESET}" "$(( ${#agent_name} + 1 ))"
+  [ -n "$wt_name" ] && [ "$r1_wt" = 1 ] && add 1 "${GREY}wt:${wt_name}${RESET}" "$((${#wt_name} + 3))"
+  [ -n "$agent_name" ] && [ "$r1_agent" = 1 ] && add 1 "${MAGENTA}@${agent_name}${RESET}" "$((${#agent_name} + 1))"
 }
 build_row1
-[ "$w1" -gt "$MAXW" ] && { r1_wt=0;    build_row1; }
-[ "$w1" -gt "$MAXW" ] && { r1_dir=0;   build_row1; }
-[ "$w1" -gt "$MAXW" ] && { r1_agent=0; build_row1; }
+[ "$w1" -gt "$MAXW" ] && {
+  r1_wt=0
+  build_row1
+}
+[ "$w1" -gt "$MAXW" ] && {
+  r1_dir=0
+  build_row1
+}
+[ "$w1" -gt "$MAXW" ] && {
+  r1_agent=0
+  build_row1
+}
 # Last resort: a pathological branch name. Trim it and rebuild.
 if [ "$w1" -gt "$MAXW" ] && [ -n "$branch" ]; then
-  keep=$(( ${#branch} - ( w1 - MAXW ) - 1 ))
+  keep=$((${#branch} - (w1 - MAXW) - 1))
   [ "$keep" -lt 8 ] && keep=8
   branch="$(printf '%.*s' "$keep" "$branch")…"
   build_row1
@@ -161,16 +204,23 @@ fi
 
 # ---- row 2 -----------------------------------------------------------------
 # Degrade order: diff -> cost -> token counts -> reset countdowns
-r2_diff=1; r2_cost=1; r2_tok=1; r2_reset=1
+r2_diff=1
+r2_cost=1
+r2_tok=1
+r2_reset=1
 build_row2() {
-  row2=""; w2=0
+  row2=""
+  w2=0
   if [ -n "$ctx_pct" ]; then
     p=$(int_of "$ctx_pct")
     if [ -n "$p" ]; then
-      if   [ "$p" -ge 90 ]; then c="$RED"
-      elif [ "$p" -ge 70 ]; then c="$YELLOW"
+      if [ "$p" -ge 90 ]; then
+        c="$RED"
+      elif [ "$p" -ge 70 ]; then
+        c="$YELLOW"
       else c="$GREEN"; fi
-      tok=$(fmt_tokens "$ctx_tok"); max=$(fmt_tokens "$ctx_max")
+      tok=$(fmt_tokens "$ctx_tok")
+      max=$(fmt_tokens "$ctx_max")
       if [ "$r2_tok" = 1 ] && [ -n "$tok" ] && [ -n "$max" ]; then
         txt="ctx ${tok}/${max} ${p}%"
       else
@@ -180,35 +230,63 @@ build_row2() {
     fi
   fi
   for wnd in 5h 7d; do
-    if [ "$wnd" = 5h ]; then v="$rl_5h"; rr="$rl_5h_reset"; else v="$rl_7d"; rr="$rl_7d_reset"; fi
+    if [ "$wnd" = 5h ]; then
+      v="$rl_5h"
+      rr="$rl_5h_reset"
+    else
+      v="$rl_7d"
+      rr="$rl_7d_reset"
+    fi
     [ -n "$v" ] || continue
-    vr=$(int_of "$v"); [ -n "$vr" ] || continue
-    txt="${wnd} ${vr}%"; sw=${#txt}
+    vr=$(int_of "$v")
+    [ -n "$vr" ] || continue
+    txt="${wnd} ${vr}%"
+    sw=${#txt}
     if [ "$r2_reset" = 1 ]; then
       cd=$(fmt_reset "$rr")
-      [ -n "$cd" ] && { txt="${txt} ↻${cd}"; sw=$(( sw + 2 + ${#cd} )); }
+      [ -n "$cd" ] && {
+        txt="${txt} ↻${cd}"
+        sw=$((sw + 2 + ${#cd}))
+      }
     fi
     add 2 "${MAGENTA}${txt}${RESET}" "$sw"
   done
   if [ "$r2_cost" = 1 ] && [ -n "$cost" ]; then
     cs=$(printf '%.2f' "$cost" 2>/dev/null)
     if [ -n "$cs" ] && [ "$cs" != "0.00" ]; then
-      add 2 "${GREY}\$${cs}${RESET}" "$(( ${#cs} + 1 ))"
+      add 2 "${GREY}\$${cs}${RESET}" "$((${#cs} + 1))"
     fi
   fi
   if [ "$r2_diff" = 1 ]; then
-    la=${git_add:-0}; ld=${git_del:-0}
-    case "$la$ld" in ''|*[!0-9]*) la=0; ld=0 ;; esac
+    la=${git_add:-0}
+    ld=${git_del:-0}
+    case "$la$ld" in '' | *[!0-9]*)
+      la=0
+      ld=0
+      ;;
+    esac
     if [ "$la" -gt 0 ] || [ "$ld" -gt 0 ]; then
-      add 2 "${GREEN}+${la}${RESET}${DIM}/${RESET}${RED}-${ld}${RESET}" "$(( ${#la} + ${#ld} + 3 ))"
+      add 2 "${GREEN}+${la}${RESET}${DIM}/${RESET}${RED}-${ld}${RESET}" "$((${#la} + ${#ld} + 3))"
     fi
   fi
 }
 build_row2
-[ "$w2" -gt "$MAXW" ] && { r2_diff=0;  build_row2; }
-[ "$w2" -gt "$MAXW" ] && { r2_cost=0;  build_row2; }
-[ "$w2" -gt "$MAXW" ] && { r2_tok=0;   build_row2; }
-[ "$w2" -gt "$MAXW" ] && { r2_reset=0; build_row2; }
+[ "$w2" -gt "$MAXW" ] && {
+  r2_diff=0
+  build_row2
+}
+[ "$w2" -gt "$MAXW" ] && {
+  r2_cost=0
+  build_row2
+}
+[ "$w2" -gt "$MAXW" ] && {
+  r2_tok=0
+  build_row2
+}
+[ "$w2" -gt "$MAXW" ] && {
+  r2_reset=0
+  build_row2
+}
 
 [ -n "$row1" ] && printf '%b\n' "$row1"
 [ -n "$row2" ] && printf '%b\n' "$row2"

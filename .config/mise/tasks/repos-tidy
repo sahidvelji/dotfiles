@@ -24,134 +24,134 @@ REPOS_ROOT="${REPOS_ROOT:-$HOME/repos}"
 # Tidy one repo and print a single summary line. Run as a child process by the
 # xargs fan-out below, so it must not depend on mise's usage_* environment.
 if [[ "${1-}" == "__one" ]]; then
-	repo="$2"
-	dry_run="$3"
-	force_closed="$4"
-	name="${repo##*/}"
-	status=()
+  repo="$2"
+  dry_run="$3"
+  force_closed="$4"
+  name="${repo##*/}"
+  status=()
 
-	cd "$repo" || exit 0
+  cd "$repo" || exit 0
 
-	report() {
-		printf '%-24s %s\n' "$name" "$1"
-		exit 0
-	}
+  report() {
+    printf '%-24s %s\n' "$name" "$1"
+    exit 0
+  }
 
-	# Everything below assumes a checked-out branch. On a detached HEAD the
-	# `$current == $default` test silently takes the feature-branch path and
-	# rewrites refs/heads/<default> with no branch checked out.
-	current="$(git symbolic-ref --quiet --short HEAD 2>/dev/null)"
-	[[ -n $current ]] || report "detached HEAD, skipped"
+  # Everything below assumes a checked-out branch. On a detached HEAD the
+  # `$current == $default` test silently takes the feature-branch path and
+  # rewrites refs/heads/<default> with no branch checked out.
+  current="$(git symbolic-ref --quiet --short HEAD 2>/dev/null)"
+  [[ -n $current ]] || report "detached HEAD, skipped"
 
-	if ((dry_run == 0)) && ! git fetch --all --prune --quiet 2>/dev/null; then
-		report "fetch failed"
-	fi
+  if ((dry_run == 0)) && ! git fetch --all --prune --quiet 2>/dev/null; then
+    report "fetch failed"
+  fi
 
-	# origin/HEAD is only written at clone time and can go stale or missing;
-	# --auto re-resolves it against the remote.
-	default="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)"
-	if [[ -z $default ]] && ((dry_run == 0)); then
-		git remote set-head origin --auto >/dev/null 2>&1
-		default="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)"
-	fi
-	[[ -n $default ]] || report "no origin/HEAD"
-	default="${default#origin/}"
+  # origin/HEAD is only written at clone time and can go stale or missing;
+  # --auto re-resolves it against the remote.
+  default="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)"
+  if [[ -z $default ]] && ((dry_run == 0)); then
+    git remote set-head origin --auto >/dev/null 2>&1
+    default="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)"
+  fi
+  [[ -n $default ]] || report "no origin/HEAD"
+  default="${default#origin/}"
 
-	# Honour whatever the default branch tracks: a fork pulls from upstream
-	# and pushes to origin. If it tracks origin (or nothing) while an upstream
-	# remote exists, prefer upstream — a fork's origin/<default> can trail the
-	# real project by hundreds of commits, and local <default> may not even be
-	# an ancestor of it, which would report "diverged" on a repo that is fine.
-	# Read-only: the branch's own config is left alone.
-	tracking="$(git rev-parse --abbrev-ref --symbolic-full-name "$default@{upstream}" 2>/dev/null)"
-	if [[ -z $tracking || ${tracking%%/*} == origin ]] &&
-		git rev-parse --verify --quiet "refs/remotes/upstream/$default" >/dev/null; then
-		tracking="upstream/$default"
-	fi
-	[[ -n $tracking ]] || tracking="origin/$default"
-	src=""
-	[[ ${tracking%%/*} == origin ]] || src=" (${tracking%%/*})"
+  # Honour whatever the default branch tracks: a fork pulls from upstream
+  # and pushes to origin. If it tracks origin (or nothing) while an upstream
+  # remote exists, prefer upstream — a fork's origin/<default> can trail the
+  # real project by hundreds of commits, and local <default> may not even be
+  # an ancestor of it, which would report "diverged" on a repo that is fine.
+  # Read-only: the branch's own config is left alone.
+  tracking="$(git rev-parse --abbrev-ref --symbolic-full-name "$default@{upstream}" 2>/dev/null)"
+  if [[ -z $tracking || ${tracking%%/*} == origin ]] &&
+    git rev-parse --verify --quiet "refs/remotes/upstream/$default" >/dev/null; then
+    tracking="upstream/$default"
+  fi
+  [[ -n $tracking ]] || tracking="origin/$default"
+  src=""
+  [[ ${tracking%%/*} == origin ]] || src=" (${tracking%%/*})"
 
-	# gh-poi refuses to delete the branch you are standing on, so a repo left
-	# on a branch whose PR has merged never gets pruned. Step off it, but only
-	# when nothing is still open for the same head.
-	if [[ $current != "$default" ]] && [[ -z "$(git status --porcelain)" ]]; then
-		merged="$(gh pr list --head "$current" --author @me --state merged --json number --jq length 2>/dev/null)"
-		open="$(gh pr list --head "$current" --author @me --state open --json number --jq length 2>/dev/null)"
-		if [[ ${merged:-0} -gt 0 && ${open:-0} -eq 0 ]]; then
-			if ((dry_run)); then
-				status+=("would switch off merged $current")
-				current="$default"
-			elif git switch --quiet "$default" 2>/dev/null; then
-				status+=("switched off merged $current")
-				current="$default"
-			fi
-		fi
-	fi
+  # gh-poi refuses to delete the branch you are standing on, so a repo left
+  # on a branch whose PR has merged never gets pruned. Step off it, but only
+  # when nothing is still open for the same head.
+  if [[ $current != "$default" ]] && [[ -z "$(git status --porcelain)" ]]; then
+    merged="$(gh pr list --head "$current" --author @me --state merged --json number --jq length 2>/dev/null)"
+    open="$(gh pr list --head "$current" --author @me --state open --json number --jq length 2>/dev/null)"
+    if [[ ${merged:-0} -gt 0 && ${open:-0} -eq 0 ]]; then
+      if ((dry_run)); then
+        status+=("would switch off merged $current")
+        current="$default"
+      elif git switch --quiet "$default" 2>/dev/null; then
+        status+=("switched off merged $current")
+        current="$default"
+      fi
+    fi
+  fi
 
-	if [[ $current == "$default" ]]; then
-		if [[ -n "$(git status --porcelain)" ]]; then
-			status+=("dirty, $default not pulled")
-		elif ((dry_run)); then
-			behind="$(git rev-list --count "HEAD..$tracking" 2>/dev/null)"
-			if [[ ${behind:-0} -gt 0 ]]; then
-				status+=("$default behind by $behind$src")
-			else
-				status+=("$default up to date$src")
-			fi
-		elif git merge --ff-only --quiet "$tracking" 2>/dev/null; then
-			status+=("$default up to date$src")
-		else
-			status+=("$default diverged$src")
-		fi
-	else
-		behind="$(git rev-list --count "$default..$tracking" 2>/dev/null)"
-		if ((dry_run)); then
-			if [[ ${behind:-0} -gt 0 ]]; then
-				status+=("$default behind by $behind$src, on $current")
-			else
-				status+=("$default up to date$src, on $current")
-			fi
-		# Fetching from "." moves the local branch to match the already-fetched
-		# remote ref with no checkout and no second network round trip. Without
-		# --force this refuses anything that is not a fast-forward.
-		elif git fetch --quiet . "refs/remotes/$tracking:refs/heads/$default" 2>/dev/null; then
-			status+=("$default fast-forwarded$src, on $current")
-		else
-			status+=("$default diverged$src, on $current")
-		fi
-	fi
+  if [[ $current == "$default" ]]; then
+    if [[ -n "$(git status --porcelain)" ]]; then
+      status+=("dirty, $default not pulled")
+    elif ((dry_run)); then
+      behind="$(git rev-list --count "HEAD..$tracking" 2>/dev/null)"
+      if [[ ${behind:-0} -gt 0 ]]; then
+        status+=("$default behind by $behind$src")
+      else
+        status+=("$default up to date$src")
+      fi
+    elif git merge --ff-only --quiet "$tracking" 2>/dev/null; then
+      status+=("$default up to date$src")
+    else
+      status+=("$default diverged$src")
+    fi
+  else
+    behind="$(git rev-list --count "$default..$tracking" 2>/dev/null)"
+    if ((dry_run)); then
+      if [[ ${behind:-0} -gt 0 ]]; then
+        status+=("$default behind by $behind$src, on $current")
+      else
+        status+=("$default up to date$src, on $current")
+      fi
+    # Fetching from "." moves the local branch to match the already-fetched
+    # remote ref with no checkout and no second network round trip. Without
+    # --force this refuses anything that is not a fast-forward.
+    elif git fetch --quiet . "refs/remotes/$tracking:refs/heads/$default" 2>/dev/null; then
+      status+=("$default fast-forwarded$src, on $current")
+    else
+      status+=("$default diverged$src, on $current")
+    fi
+  fi
 
-	# Count branches gh-poi removed (or would remove). Under "Deleted branches"
-	# it prints one indented line per branch, or the sentinel "There are no
-	# branches ..." when it removed nothing.
-	poi_deleted() {
-		local out
-		if ((dry_run)); then
-			out="$(gh-poi --dry-run "$@" 2>&1)" || return 1
-		else
-			out="$(gh-poi "$@" 2>&1)" || return 1
-		fi
-		printf '%s\n' "$out" |
-			sed -n '/^Deleted branches$/,/^$/p' |
-			grep -E '^  [^ ]' |
-			grep -cv 'There are no branches' || true
-	}
+  # Count branches gh-poi removed (or would remove). Under "Deleted branches"
+  # it prints one indented line per branch, or the sentinel "There are no
+  # branches ..." when it removed nothing.
+  poi_deleted() {
+    local out
+    if ((dry_run)); then
+      out="$(gh-poi --dry-run "$@" 2>&1)" || return 1
+    else
+      out="$(gh-poi "$@" 2>&1)" || return 1
+    fi
+    printf '%s\n' "$out" |
+      sed -n '/^Deleted branches$/,/^$/p' |
+      grep -E '^  [^ ]' |
+      grep -cv 'There are no branches' || true
+  }
 
-	if pruned="$(poi_deleted)"; then
-		# gh-poi only considers merged PRs; a second pass catches branches
-		# whose PR was closed without merging.
-		((force_closed)) && closed="$(poi_deleted --state closed)" &&
-			pruned=$((pruned + closed))
-		((pruned > 0)) && status+=("$pruned branch(es) pruned")
-	else
-		status+=("gh-poi failed")
-	fi
+  if pruned="$(poi_deleted)"; then
+    # gh-poi only considers merged PRs; a second pass catches branches
+    # whose PR was closed without merging.
+    ((force_closed)) && closed="$(poi_deleted --state closed)" &&
+      pruned=$((pruned + closed))
+    ((pruned > 0)) && status+=("$pruned branch(es) pruned")
+  else
+    status+=("gh-poi failed")
+  fi
 
-	summary=""
-	for s in "${status[@]}"; do summary+="${summary:+; }$s"; done
-	printf '%-24s %s\n' "$name" "$summary"
-	exit 0
+  summary=""
+  for s in "${status[@]}"; do summary+="${summary:+; }$s"; done
+  printf '%-24s %s\n' "$name" "$summary"
+  exit 0
 fi
 
 jobs="${usage_jobs:-4}"
@@ -162,32 +162,32 @@ force_closed=0
 [[ ${usage_force_closed:-false} == "true" ]] && force_closed=1
 
 command -v gh-poi >/dev/null || {
-	echo "repos-tidy: gh-poi is not installed (mise install)" >&2
-	exit 1
+  echo "repos-tidy: gh-poi is not installed (mise install)" >&2
+  exit 1
 }
 
 # Named repos win over --all, which wins over the repo we are standing in.
 repos=()
 if [[ -n ${usage_repo:-} ]]; then
-	for n in ${usage_repo}; do
-		if [[ -d "$REPOS_ROOT/$n/.git" ]]; then
-			repos+=("$REPOS_ROOT/$n")
-		else
-			echo "repos-tidy: no git repo named '$n' under $REPOS_ROOT" >&2
-			exit 1
-		fi
-	done
+  for n in ${usage_repo}; do
+    if [[ -d "$REPOS_ROOT/$n/.git" ]]; then
+      repos+=("$REPOS_ROOT/$n")
+    else
+      echo "repos-tidy: no git repo named '$n' under $REPOS_ROOT" >&2
+      exit 1
+    fi
+  done
 elif [[ $all != "true" ]] && toplevel="$(git rev-parse --show-toplevel 2>/dev/null)"; then
-	repos=("$toplevel")
+  repos=("$toplevel")
 else
-	for dir in "$REPOS_ROOT"/*/; do
-		[[ -d "${dir}.git" ]] && repos+=("${dir%/}")
-	done
+  for dir in "$REPOS_ROOT"/*/; do
+    [[ -d "${dir}.git" ]] && repos+=("${dir%/}")
+  done
 fi
 
 if ((${#repos[@]} == 0)); then
-	echo "repos-tidy: no git repos found under $REPOS_ROOT" >&2
-	exit 1
+  echo "repos-tidy: no git repos found under $REPOS_ROOT" >&2
+  exit 1
 fi
 
 # xargs re-invokes this script per repo, so resolve it to an absolute path:
@@ -196,4 +196,4 @@ self="$(cd "$(dirname "$0")" && pwd -P)/$(basename "$0")"
 
 ((dry_run)) && echo "== DRY RUN — no fetch, counts are from the last one =="
 printf '%s\0' "${repos[@]}" |
-	xargs -0 -P "$jobs" -I{} "$self" __one {} "$dry_run" "$force_closed"
+  xargs -0 -P "$jobs" -I{} "$self" __one {} "$dry_run" "$force_closed"

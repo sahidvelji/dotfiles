@@ -15,8 +15,10 @@ and Homebrew (system packages).
 - The same config declares macOS preferences under `[bootstrap.macos]`
 - Homebrew packages live in `.config/homebrew/Brewfile`
   and install via `mise run brew-install`
-- `mise.toml` defines a few small tasks scoped to this repo,
+- `mise.toml` defines a few small tasks scoped to this repo
+  and pins the lint tools,
   and `.config/mise/tasks/` holds global tasks that run from anywhere
+- `hk.pkl` lints and formats every commit
 
 `mise dot` is the short spelling of `mise dotfiles` / `mise bootstrap dotfiles`.
 
@@ -186,6 +188,26 @@ The default branch is refreshed from whatever it actually tracks,
 which in a fork is `upstream` rather than the fork's own `origin`.
 
 A new task file needs `mise dot apply` before it is runnable from elsewhere.
+
+## Linting
+
+[hk](https://hk.jdx.dev/) checks each commit.
+The global git hooks in `.config/git/config` run hk in any repo
+that has an `hk.pkl`,
+so this repo needs no hook setup of its own.
+The linters and formatters are pinned in `mise.toml`.
+
+```bash
+hk check --all   # lint every file
+hk fix --all     # apply every available fix
+HK=0 git commit  # skip the hooks for one commit
+```
+
+`hk.pkl` lists the linter and formatter for each file type.
+Tool settings sit beside it
+(`.editorconfig` for shfmt and stylua, `biome.json`, `ryl.toml`, `tombi.toml`)
+or next to the config they cover
+(`.config/nvim/selene.toml` and `vim.yml`).
 
 ## Claude Code config
 
