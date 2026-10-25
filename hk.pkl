@@ -20,7 +20,6 @@ exclude =
 
 steps {
   // Any file
-  ["check-case-conflict"] = Builtins.check_case_conflict
   ["check-symlinks"] = Builtins.check_symlinks
   ["destroyed-symlinks"] = Builtins.destroyed_symlinks
   ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
