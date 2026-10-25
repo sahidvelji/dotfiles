@@ -12,8 +12,6 @@ local zsh =
 // lazy.nvim and LazyVim write these; keep them as generated.
 exclude = List(".config/nvim/lazy-lock.json", ".config/nvim/lazyvim.json")
 
-local shfmtFlags = "--indent 2 --case-indent"
-
 steps {
   // Any file
   ["check-case-conflict"] = Builtins.check_case_conflict
@@ -29,20 +27,9 @@ steps {
   // Shell
   ["shellcheck"] = Builtins.shellcheck
   ["shfmt"] = (Builtins.shfmt) {
-    // shfmt picks the zsh dialect from the file name or shebang.
+    // shfmt picks the zsh dialect from the file name or shebang,
+    // and its formatting options from .editorconfig.
     match_any = Builtins.shfmt.match_any + zsh
-    check_diff { command = "shfmt \(shfmtFlags) --diff --apply-ignore {{ files }}" }
-    check_list_files {
-      command =
-        """
-        files=$(shfmt \(shfmtFlags) --list --apply-ignore {{ files }})
-        if [ -n "$files" ]; then
-        echo "$files"
-        exit 1
-        fi
-        """
-    }
-    fix { command = "shfmt \(shfmtFlags) --write --apply-ignore {{ files }}" }
   }
 
   // Zsh: shellcheck does not support it, so `zsh --no-exec` checks that it parses.

@@ -204,7 +204,8 @@ HK=0 git commit  # skip the hooks for one commit
 ```
 
 `hk.pkl` lists the linter and formatter for each file type.
-Tool settings sit beside it (`biome.json`, `ryl.toml`, `tombi.toml`)
+Tool settings sit beside it
+(`.editorconfig` for shfmt, `biome.json`, `ryl.toml`, `tombi.toml`)
 or next to the config they cover
 (`.config/nvim/selene.toml` and `vim.yml`, `.config/yazi/stylua.toml`).
 
