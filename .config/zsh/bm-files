@@ -1,4 +1,4 @@
-al    ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc
+al    ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliases.zsh
 bd    ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/bm-dirs
 bf    ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/bm-files
 cfv   ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua

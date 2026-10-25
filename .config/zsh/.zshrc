@@ -34,7 +34,7 @@ setopt HIST_VERIFY                 # Show expanded history before executing (!! 
 _globalias_skip=()
 noexpand() { local s; for s in "$@"; do _globalias_skip+=${s%%=*}; alias -- "$s"; done }
 
-[ -f "$ZDOTDIR/aliasrc" ] && source "$ZDOTDIR/aliasrc"
+[ -f "$ZDOTDIR/aliases.zsh" ] && source "$ZDOTDIR/aliases.zsh"
 
 # Bookmark aliases from bm-dirs/bm-files; `(e)` expands their ${XDG_*:-...} forms.
 # Each entry also registers a `hash -d` named directory so the key works as a

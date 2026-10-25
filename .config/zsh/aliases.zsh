@@ -1,6 +1,3 @@
-#!/bin/zsh
-# vim: ft=sh
-
 # Color Defaults
 noexpand \
   ls="eza --git --git-repos" \

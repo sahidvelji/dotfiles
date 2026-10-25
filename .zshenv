@@ -1,4 +1,3 @@
-#!/bin/zsh
 # ~/.zshenv — sourced for EVERY zsh (login, interactive, and non-interactive
 # `zsh -c` / scripts / cron / git hooks). zsh reads this from $HOME because
 # ZDOTDIR is not set yet; we set it here so the rest of the config loads from
