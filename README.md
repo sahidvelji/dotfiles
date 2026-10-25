@@ -84,13 +84,14 @@ A new top-level dotfile matches no group.
 Give it a dotless source and write the entry to the repo's `mise.toml`:
 
 ```bash
-mise dot add --local --source ~/repos/dotfiles/foo ~/.foo
+mise dot add --local --source foo ~/.foo && mise dot apply
 ```
 
-Keep the source absolute:
-mise 2026.10.18 links a relative `--source` as written,
-so `~/.foo` would point at `foo` beside it
-until the next `mise dot apply`.
+Run it from the repo root.
+mise 2026.10.18 moves the file relative to the current directory
+but links a relative `--source` as written,
+so `~/.foo` points at `foo` beside it
+until the `mise dot apply` repoints it.
 
 A group keeps source names as they are,
 so a new dotfile nested inside one,
