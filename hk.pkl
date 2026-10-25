@@ -25,7 +25,10 @@ steps {
   ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
   ["check-shebang-scripts-are-executable"] = Builtins.check_shebang_scripts_are_executable
   ["betterleaks"] = Builtins.betterleaks
-  ["trailing-whitespace"] = Builtins.trailing_whitespace
+  ["trailing-whitespace"] = (Builtins.trailing_whitespace) {
+    // Two trailing spaces are a Markdown line break; rumdl handles whitespace there.
+    exclude = "**/*.md"
+  }
   ["newlines"] = Builtins.newlines
   ["typos"] = Builtins.typos
 
