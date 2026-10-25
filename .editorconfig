@@ -1,6 +1,6 @@
 root = true
 
-# shfmt reads these instead of flags.
+# shfmt reads these instead of flags, and stylua in place of a stylua.toml.
 [*]
 indent_style = space
 indent_size = 2
