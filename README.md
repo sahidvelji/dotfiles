@@ -90,8 +90,7 @@ mise dot add --local --source ~/repos/dotfiles/foo ~/.foo
 Keep the source absolute:
 mise 2026.10.18 links a relative `--source` as written,
 so `~/.foo` would point at `foo` beside it
-until the next `mise dot apply`
-([#25](https://github.com/sahidvelji/dotfiles/issues/25)).
+until the next `mise dot apply`.
 
 A group keeps source names as they are,
 so a new dotfile nested inside one,
