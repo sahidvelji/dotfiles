@@ -1,29 +1,35 @@
 [settings.dotfiles]
 root = "~/repos/dotfiles"
-# Matches stow's --no-folding: walk each source dir recursively and symlink
-# every leaf file. `symlink` (the default) would replace the whole target dir
-# with a single symlink — wrong for ~/.config, ~/.local where unmanaged peers
-# live alongside managed entries.
-default_mode = "symlink-each"
 
 # gh keeps its token in the macOS Keychain, where mise cannot read it, so ask gh
 # when mise needs one.
 [settings.github]
 credential_command = "gh auth token"
 
+# Each group links every file under its root into the target and leaves
+# unmanaged files there alone, such as Claude Code's runtime state in ~/.claude.
+[dotfile_groups.config]
+root = "config"
+target = "~/.config"
+
+# Repo copies of dotfiles drop the leading dot. hk.pkl and .editorconfig list
+# the zsh startup files too.
+[dotfile_groups.config.entries]
+"~/.config/zsh/.zshrc" = { source = "zsh/zshrc" }
+
+[dotfile_groups.local]
+root = "local"
+target = "~/.local"
+
+[dotfile_groups.claude]
+root = "claude"
+target = "~/.claude"
+
 [dotfiles]
-# Sources are implied from the home-relative target under dotfiles.root, so
-# `~/.config` resolves source = ~/repos/dotfiles/.config.
-"~/.config" = {}
-"~/.local" = {}
-# symlink-each only links leaves that exist in the repo, so Claude Code's
-# runtime state under ~/.claude (projects/, sessions/, history.jsonl) is
-# left untouched.
-"~/.claude" = {}
 # ~/.zshenv is the zsh bootstrap: it sets ZDOTDIR + XDG so the rest of the
-# config loads from ~/.config/zsh. Managed here so `mise bootstrap` reproduces
-# it on a fresh machine.
-"~/.zshenv" = { mode = "symlink" }
+# config loads from ~/.config/zsh. A relative source would resolve from
+# ~/.config/mise, where this file is linked.
+"~/.zshenv" = "~/repos/dotfiles/zshenv"
 
 [bootstrap.user]
 # Declarative login shell — `mise bootstrap` runs `chsh -s` only if it differs.

@@ -6,12 +6,12 @@ output = "interleave"
 # not exist until `mise bootstrap`, so brew falls back to ~/.Brewfile.
 [tasks.brew-dump]
 description = "Update Brewfile with current brew packages"
-dir = "{{config_root}}/.config/homebrew"
+dir = "{{config_root}}/config/homebrew"
 run = 'brew bundle dump --force --no-describe --no-mas --no-vscode --no-go --no-cargo --no-uv --no-flatpak --no-winget --no-krew --no-npm'
 
 [tasks.brew-install]
 description = "Install brew packages from Brewfile"
-dir = "{{config_root}}/.config/homebrew"
+dir = "{{config_root}}/config/homebrew"
 run = 'brew bundle'
 
 [tools]
