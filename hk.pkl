@@ -67,7 +67,7 @@ steps {
   ["rumdl"] = Builtins.rumdl
   ["pkl-format"] = Builtins.pkl_format
 
-  // GitHub Actions: actionlint's checks plus zizmor's security audits
+  // GitHub Actions: correctness and security checks for workflows
   ["jactionlint"] = Builtins.jactionlint
 }
 
