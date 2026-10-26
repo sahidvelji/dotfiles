@@ -45,3 +45,4 @@ Still ask before committing.
 Renovate is the exception:
 it opens pull requests for tool bumps and merges them into `main`,
 so pull before committing.
+Major updates wait for review instead of merging.

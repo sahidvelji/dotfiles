@@ -32,7 +32,8 @@ and Homebrew (system packages).
 - `hk.pkl` lints and formats every commit
   and the `lint` workflow runs it in CI
 - Renovate keeps the pins in `mise.toml`, `mise.lock` and `hk.pkl` current
-  and merges its own PRs once CI passes
+  and merges its own PRs once CI passes;
+  major updates wait for review
 
 Under `config/`, mise also reads the global config and its tasks
 as project config.
