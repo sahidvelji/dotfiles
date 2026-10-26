@@ -1,0 +1,36 @@
+name: lint
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# A new push to a pull request cancels its older runs;
+# each push to main gets its own group, so every commit there is checked.
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{
+    github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  hk:
+    name: hk check
+    # The configs only run on macOS, and the runner ships zsh for zsh-syntax.
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@82a612c5ab8bcda7cc5db6b7e81a8e7584c3dc6e  # v5.2.3
+      - run: hk check --all
+        shell: bash
+        # jactionlint's online checks query the GitHub API, so run them here
+        # rather than in the local hooks.
+        env:
+          JACTIONLINT_ONLINE: "1"
+          GITHUB_TOKEN: ${{ github.token }}

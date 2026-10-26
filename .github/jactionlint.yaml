@@ -1,0 +1,8 @@
+profile: pedantic
+rules:
+  # Always run on GitHub's newest macOS image.
+  mutable-runner-label: false
+  # Fail on the online warnings, which nobody reads on an automerged PR.
+  ref-version-mismatch: error
+  archived-uses: error
+  repojacking: error

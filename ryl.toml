@@ -18,6 +18,12 @@ trailing-spaces = "enable"
 # GitHub workflows use `on:` as a key.
 truthy = { level = "warning", check-keys = false }
 
+# Renovate pins actions to a full commit SHA plus a version comment,
+# which cannot be wrapped.
+[[lint.per-line-ignores]]
+regex = 'uses: \S+@[0-9a-f]{40}\s+#'
+rules = ["line-length"]
+
 [format]
 # Leave quoting as written: gh and lazygit write double quotes.
 quote-style = "preserve"

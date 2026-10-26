@@ -39,6 +39,10 @@ Fix the cause rather than skipping the hook with `HK=0` or `--no-verify`.
 ## Git
 
 Commit and push to `main` directly.
-This repo does not use feature branches or pull requests,
+Your own changes skip feature branches and pull requests,
 so the usual "branch first when on the default branch" rule does not apply here.
 Still ask before committing.
+Renovate is the exception:
+it opens pull requests for tool bumps and merges them into `main`,
+so pull before committing.
+Major updates wait for review instead of merging.
