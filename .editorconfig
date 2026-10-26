@@ -7,6 +7,6 @@ indent_size = 2
 switch_case_indent = true
 
 # The zsh startup files have no extension, so shfmt cannot infer the dialect.
-# hk.pkl and mise.toml list them too.
+# hk.pkl and config/mise/config.toml list them too.
 [{zshenv,config/zsh/zshrc}]
 shell_variant = zsh

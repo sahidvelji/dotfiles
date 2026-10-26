@@ -18,24 +18,19 @@ and Homebrew (system packages).
   | `zshenv`           | `~/.zshenv`            |
   | `config/zsh/zshrc` | `~/.config/zsh/.zshrc` |
 
-- `mise dot apply` reads the groups and `[dotfiles]` in the repo's `mise.toml`
+- `mise dot apply` reads the groups and `[dotfiles]`
+  in the global mise config, `config/mise/config.toml`,
   and creates the symlinks
   (each group walks its directory recursively,
   linking every leaf file into the target)
-- The same file declares macOS preferences under `[bootstrap.macos]`,
-  defines a few small tasks scoped to this repo,
-  and pins the lint tools
+- The same config declares macOS preferences under `[bootstrap.macos]`
 - Homebrew packages live in `config/homebrew/Brewfile`
   and install via `mise run brew-install`
-- `config/mise/config.toml` is the global mise config,
+- `mise.toml` defines a few small tasks scoped to this repo
+  and pins the lint tools,
   and `config/mise/tasks/` holds global tasks that run from anywhere
 - `hk.pkl` lints and formats every commit
 
-Run mise from the repo root,
-or from anywhere with `mise -C ~/repos/dotfiles`.
-The dotfiles and bootstrap config is project config,
-so elsewhere `mise dot add` would not see the groups
-and would move a file into `~/.dotfiles` with an entry in the global config.
 Under `config/`, mise also reads the global config and its tasks
 as project config.
 
@@ -56,11 +51,17 @@ git clone https://github.com/sahidvelji/dotfiles.git ~/repos/dotfiles
 cd ~/repos/dotfiles
 mise trust                 # required: mise refuses to load an untrusted config
 mise run brew-install      # install Homebrew packages
-mise bootstrap             # dotfiles, macOS defaults, login shell, tools
+mise trust config/mise/config.toml
+mise -C config bootstrap   # dotfiles, macOS defaults, login shell, tools
 ```
 
 Order matters: the declared Dock layout names applications by path,
 and mise refuses to apply a layout naming an app that is not installed yet.
+
+The global config is not linked into `~/.config/mise` yet,
+so the first bootstrap runs from `config/`,
+where mise reads `mise/config.toml` as project config.
+Once linked, `mise bootstrap` and `mise dot` work from any directory.
 
 If a real file in `$HOME` conflicts with a symlink mise wants to create,
 `mise dot apply --force` will replace it.
@@ -68,32 +69,19 @@ Move the original aside first if you want to keep it.
 
 ## Tracking a new dotfile
 
-```bash
-cd ~/repos/dotfiles
-mise dot add ~/.config/ghostty/config
-```
-
-A file under `~/.config`, `~/.local` or `~/.claude`
-belongs to that directory's group,
-so `mise dot add` moves it into the group (`config/ghostty/config`)
-and links it back, without a new config entry.
-
-A new top-level dotfile matches no group.
-Give it a dotless source and write the entry to the repo's `mise.toml`:
+Move the file into the matching group directory,
+then apply to link it back:
 
 ```bash
-# mise 2026.10.18 links a relative --source as written; the apply repoints it
-mise dot add --local --source foo ~/.foo && mise dot apply
+mkdir -p ~/repos/dotfiles/config/foo
+mv ~/.config/foo/config ~/repos/dotfiles/config/foo/
+mise dot apply
 ```
 
-A group keeps source names as they are,
-so a new dotfile nested inside one,
-such as `~/.config/zsh/.zprofile`,
-would land in the repo with its dot.
-Move it to a dotless name under the group instead,
-declare it like `.zshrc` under `[dotfile_groups.config.entries]`
-in `mise.toml`,
-and run `mise dot apply`:
+A file whose name starts with a dot drops the dot in the repo
+and needs an explicit entry in `config/mise/config.toml`,
+like `.zshrc` under `[dotfile_groups.config.entries]`
+or `.zshenv` under `[dotfiles]`:
 
 ```toml
 "~/.config/zsh/.zprofile" = { source = "zsh/zprofile" }
@@ -131,7 +119,7 @@ After removing a whole group,
 
 ## macOS settings
 
-Preferences live in the repo's `mise.toml` alongside the dotfile groups,
+Preferences live in `config/mise/config.toml` alongside the dotfile groups,
 in three spellings:
 friendly sections (`[bootstrap.macos.dock]`, `.finder`, `.trackpad`)
 for common settings;

@@ -5,7 +5,8 @@ Each top-level directory is a mise dotfile group
 deployed into the matching dot-directory of `$HOME`
 (`config/` into `~/.config`);
 `zshenv` and `config/zsh/zshrc` are the dotless exceptions.
-The groups, `[dotfiles]` and `[bootstrap]` live in the repo's `mise.toml`.
+The groups, `[dotfiles]` and `[bootstrap]` live in the global mise config,
+`config/mise/config.toml`.
 Homebrew packages stay in `config/homebrew/Brewfile`,
 installed with `mise run brew-install`
 and refreshed with `mise run brew-dump`.
@@ -19,10 +20,14 @@ before they exist in `$HOME`.
 Global agent instructions live in `claude/CLAUDE.md`,
 symlinked to `~/.claude/CLAUDE.md`.
 
-Run mise commands from the repo root:
-elsewhere mise does not see `mise.toml`,
-and under `config/` it also reads the global config,
-`config/mise/config.toml`, and its tasks as project config.
+Add new files by hand rather than with `mise dot add`:
+move the file into the matching group directory and run `mise dot apply`.
+A file whose name starts with a dot drops the dot in the repo
+and gets an explicit entry in `config/mise/config.toml`,
+like `.zshrc` and `.zshenv`.
+
+Under `config/`, mise also reads the global config and its tasks
+as project config.
 
 ## Linting
 

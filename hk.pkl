@@ -3,7 +3,7 @@ amends "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Config.pk
 import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.pkl"
 
 // hk tags `*.zsh` files as zsh but not the startup files, which have no extension.
-// .editorconfig and mise.toml list them too.
+// .editorconfig and config/mise/config.toml list them too.
 local zsh =
   List(
     new FileSelector { types = List("zsh") },
