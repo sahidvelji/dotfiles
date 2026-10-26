@@ -3,7 +3,7 @@
 # is defined in ~/.zshenv; `typeset -U path` keeps this de-duplicated so this is
 # just a reorder. Also put Homebrew's completions on fpath before compinit.
 path=($homebrew_path $path)
-fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+fpath=(/opt/homebrew/share/zsh-completions /opt/homebrew/share/zsh/site-functions $fpath)
 
 # Shell Options
 setopt autocd         # Automatically cd into typed directory.
@@ -68,8 +68,6 @@ noexpand() {
 }
 
 # Completions
-fpath=("/opt/homebrew/share/zsh-completions" $fpath)
-
 autoload -U compinit
 zstyle ':completion:*' menu no
 # `compinit -i` rescans every fpath dir and runs compaudit on each start
