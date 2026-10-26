@@ -118,7 +118,8 @@ mise dot apply
 
 A group links each file,
 so the next apply removes the link of a deleted source.
-For an entry in `[dotfiles]`,
+For an explicit entry,
+in `[dotfiles]` or a group's `entries`,
 run `mise dot unapply <target>` before removing the entry.
 After removing a whole group,
 `mise dot apply --prune` removes the files it left behind.
