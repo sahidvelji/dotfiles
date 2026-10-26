@@ -1,20 +1,16 @@
 [settings.task]
 output = "interleave"
 
-# Group roots resolve from here, not from this file's directory. Absolute
-# because a relative root resolves from the current directory, not this file.
+# Absolute: a relative root would resolve from the current directory.
 [settings.dotfiles]
 root = "~/repos/dotfiles"
 
-# Each group links every leaf file into its target, so unmanaged peers there
-# are left alone.
 [dotfile_groups.config]
 root = "config"
 target = "~/.config"
 
-# The one nested dotfile. The walk skips an entry's source, so zshrc is not
-# also linked as ~/.config/zsh/zshrc. hk.pkl and .editorconfig list the zsh
-# startup files too.
+# The one nested dotfile. hk.pkl and .editorconfig list the zsh startup files
+# too.
 [dotfile_groups.config.entries]
 "~/.config/zsh/.zshrc" = { source = "zsh/zshrc" }
 
@@ -22,8 +18,6 @@ target = "~/.config"
 root = "local"
 target = "~/.local"
 
-# Claude Code's runtime state under ~/.claude (projects/, sessions/,
-# history.jsonl) has no source here, so it is left untouched.
 [dotfile_groups.claude]
 root = "claude"
 target = "~/.claude"

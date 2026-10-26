@@ -34,8 +34,7 @@ steps {
   // Shell
   ["shellcheck"] = Builtins.shellcheck
   ["shfmt"] = (Builtins.shfmt) {
-    // shfmt reads its formatting options from .editorconfig, and the zsh
-    // dialect from there too for the startup files, whose names give no hint.
+    // shfmt reads its options, including the zsh dialect, from .editorconfig.
     match_any = Builtins.shfmt.match_any + zsh
   }
 

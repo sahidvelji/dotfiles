@@ -1,5 +1,4 @@
-# Dotfiles and bootstrap are declared in the repo's mise.toml, not here: run
-# `mise dot` and `mise bootstrap` from ~/repos/dotfiles.
+# Dotfiles and bootstrap live in the repo's mise.toml.
 
 # gh keeps its token in the macOS Keychain, where mise cannot read it, so ask gh
 # when mise needs one.
