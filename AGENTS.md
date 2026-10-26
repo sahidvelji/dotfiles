@@ -5,8 +5,7 @@ Each top-level directory is a mise dotfile group
 deployed into the matching dot-directory of `$HOME`
 (`config/` into `~/.config`);
 `zshenv` and `config/zsh/zshrc` are the dotless exceptions.
-The groups, `[dotfiles]` and `[bootstrap]` live in the repo's `mise.toml`
-(`mise dot` is the short spelling of `mise bootstrap dotfiles`).
+The groups, `[dotfiles]` and `[bootstrap]` live in the repo's `mise.toml`.
 Homebrew packages stay in `config/homebrew/Brewfile`,
 installed with `mise run brew-install`
 and refreshed with `mise run brew-dump`.
