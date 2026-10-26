@@ -8,13 +8,6 @@
   "platformAutomerge": false,
   "packageRules": [
     {
-      "description": "Leave the global mise config alone without replacing the default ignorePaths.",
-      "matchFileNames": [
-        "config/mise/config.toml"
-      ],
-      "enabled": false
-    },
-    {
       "description": "Automerge everything except major updates, which wait for review.",
       "matchUpdateTypes": [
         "minor",
