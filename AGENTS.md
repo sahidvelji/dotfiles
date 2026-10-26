@@ -20,11 +20,12 @@ before they exist in `$HOME`.
 Global agent instructions live in `claude/CLAUDE.md`,
 symlinked to `~/.claude/CLAUDE.md`.
 
-Add new files by hand rather than with `mise dot add`:
-move the file into the matching group directory and run `mise dot apply`.
-A file whose name starts with a dot drops the dot in the repo
-and gets an explicit entry in `config/mise/config.toml`,
-like `.zshrc` and `.zshenv`.
+Track new files with `mise dot add`,
+which moves each into the group whose target holds it.
+A dotfile keeps its dot, so rename it in the repo to drop the dot,
+give it an explicit entry in `config/mise/config.toml`
+like `.zshrc` and `.zshenv`,
+and run `mise dot apply`.
 
 Under `config/`, mise also reads the global config and its tasks
 as project config.

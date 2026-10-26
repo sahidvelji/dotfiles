@@ -69,23 +69,29 @@ Move the original aside first if you want to keep it.
 
 ## Tracking a new dotfile
 
-Move the file into the matching group directory,
-then apply to link it back:
-
 ```bash
-mkdir -p ~/repos/dotfiles/config/foo
-mv ~/.config/foo/config ~/repos/dotfiles/config/foo/
-mise dot apply
+mise dot add ~/.config/foo/config
 ```
 
-A file whose name starts with a dot drops the dot in the repo
-and needs an explicit entry in `config/mise/config.toml`,
+`mise dot add` moves the file into the group whose target holds it,
+here `config/foo/config`,
+and links it back without writing an entry.
+
+A dotfile keeps its dot in the repo,
+so rename it there to drop the dot
+and give it an explicit entry in `config/mise/config.toml`,
 like `.zshrc` under `[dotfile_groups.config.entries]`
 or `.zshenv` under `[dotfiles]`:
 
 ```toml
 "~/.config/zsh/.zprofile" = { source = "zsh/zprofile" }
 ```
+
+A dotfile outside the groups, such as `~/.foorc`,
+lands at the repo root with a `"~/.foorc" = {}` entry in `[dotfiles]`;
+after the rename, give that entry the full source,
+`"~/.foorc" = "~/repos/dotfiles/foorc"`.
+Either way, `mise dot apply` then re-points the link.
 
 ## Checking state
 
