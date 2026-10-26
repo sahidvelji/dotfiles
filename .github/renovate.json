@@ -5,7 +5,6 @@
     "helpers:pinGitHubActionDigests"
   ],
   "minimumReleaseAge": "3 days",
-  "platformAutomerge": false,
   "packageRules": [
     {
       "description": "Automerge everything except major updates, which wait for review.",
