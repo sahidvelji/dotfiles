@@ -5,10 +5,26 @@
     "helpers:pinGitHubActionDigests"
   ],
   "minimumReleaseAge": "3 days",
-  "automerge": true,
   "platformAutomerge": false,
-  "ignorePaths": [
-    "config/mise/config.toml"
+  "packageRules": [
+    {
+      "description": "Leave the global mise config alone without replacing the default ignorePaths.",
+      "matchFileNames": [
+        "config/mise/config.toml"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Automerge everything except major updates, which wait for review.",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "pinDigest",
+        "digest"
+      ],
+      "automerge": true
+    }
   ],
   "customManagers": [
     {
