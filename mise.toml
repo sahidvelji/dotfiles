@@ -1,6 +1,3 @@
-[settings.task]
-output = "interleave"
-
 # Run beside the repo's Brewfile, which brew bundle reads as ./Brewfile.
 # --global would miss it on a fresh Mac: the ~/.config/homebrew symlink does
 # not exist until `mise bootstrap`, so brew falls back to ~/.Brewfile.
