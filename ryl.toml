@@ -5,7 +5,7 @@ braces = "enable"
 brackets = "enable"
 colons = "enable"
 commas = "enable"
-comments = { level = "warning" }
+comments = { level = "warning", min-spaces-from-content = 1 }
 comments-indentation = { level = "warning" }
 empty-lines = "enable"
 hyphens = "enable"
@@ -25,5 +25,6 @@ regex = 'uses: \S+@[0-9a-f]{40}\s+#'
 rules = ["line-length"]
 
 [format]
+comment-spacing = 1
 # Leave quoting as written: gh and lazygit write double quotes.
 quote-style = "preserve"
