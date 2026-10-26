@@ -1,14 +1,6 @@
-amends "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.9.0/hk@2.9.0#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.pkl"
-
-// hk tags `*.zsh` files as zsh but not the startup files, which have no extension.
-// .editorconfig and config/mise/config.toml list them too.
-local zsh =
-  List(
-    new FileSelector { types = List("zsh") },
-    new FileSelector { glob = List("zshenv", "config/zsh/zshrc") },
-  )
+import "package://github.com/jdx/hk/releases/download/v2.9.0/hk@2.9.0#/Builtins.pkl"
 
 exclude =
   List(
@@ -31,14 +23,12 @@ steps {
 
   // Shell
   ["shellcheck"] = Builtins.shellcheck
-  ["shfmt"] = (Builtins.shfmt) {
-    // shfmt reads its options, including the zsh dialect, from .editorconfig.
-    match_any = Builtins.shfmt.match_any + zsh
-  }
+  // shfmt reads its options, including the zsh dialect, from .editorconfig.
+  ["shfmt"] = Builtins.shfmt
 
   // Zsh: shellcheck does not support it, so `zsh --no-exec` checks that it parses.
   ["zsh-syntax"] = new Step {
-    match_any = zsh
+    types = List("zsh")
     check =
       """
       failed=0

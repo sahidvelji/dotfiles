@@ -12,8 +12,8 @@ credential_command = "gh auth token"
 root = "config"
 target = "~/.config"
 
-# Repo copies of dotfiles drop the leading dot. hk.pkl and .editorconfig list
-# the zsh startup files too.
+# Repo copies of dotfiles drop the leading dot. .editorconfig lists the zsh
+# startup files too.
 [dotfile_groups.config.entries]
 "~/.config/zsh/.zshrc" = { source = "zsh/zshrc" }
 
