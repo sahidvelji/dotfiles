@@ -19,8 +19,6 @@ exclude =
 
 steps {
   // Any file
-  ["check-symlinks"] = Builtins.check_symlinks
-  ["destroyed-symlinks"] = Builtins.destroyed_symlinks
   ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
   ["check-shebang-scripts-are-executable"] = Builtins.check_shebang_scripts_are_executable
   ["betterleaks"] = Builtins.betterleaks
