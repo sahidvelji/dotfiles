@@ -17,7 +17,7 @@ run = 'brew bundle'
 betterleaks = "1.9.0"
 biome = "2.6.2"
 hk = { version = "2.9.0", workflow = "release.yml" }
-"packslip:github.com/jdx/jactionlint" = { version = "2.3.0", workflow = "release.yaml" }
+jactionlint = { version = "2.3.0", workflow = "release.yaml" }
 pkl = "0.32.2"
 rumdl = "0.3.0"
 shellcheck = "0.11.0"

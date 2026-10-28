@@ -54,16 +54,18 @@ specifiers = ["2.9.0"]
 checksum = "sha256:c7c4d85fd44e88d54b2bf8f9fc38165e278983f54210c095a3e3e8c593e4b720"
 url = "https://github.com/jdx/hk/releases/download/v2.9.0/hk-aarch64-apple-darwin.tar.gz"
 signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
+repository_ids = { repository = "922514152" }
 
-[[tools."packslip:github.com/jdx/jactionlint"]]
+[[tools.jactionlint]]
 version = "2.3.0"
 backend = "packslip:github.com/jdx/jactionlint"
 specifiers = ["2.3.0"]
 
-[tools."packslip:github.com/jdx/jactionlint"."platforms.macos-arm64"]
+[tools.jactionlint."platforms.macos-arm64"]
 checksum = "sha256:f96afa36578b21290203ae8df4fa7ac3bf5aba08ed288df28cb0530af7ca6e55"
 url = "https://github.com/jdx/jactionlint/releases/download/v2.3.0/jactionlint_2.3.0_darwin_arm64.tar.gz"
 signer = "sigstore-oidc:https://github.com/jdx/jactionlint/.github/workflows/release.yaml"
+repository_ids = { repository = "1404951382" }
 
 [[tools.pkl]]
 version = "0.32.2"
