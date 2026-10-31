@@ -52,7 +52,10 @@ export HOMEBREW_REPOSITORY="/opt/homebrew"
 # shells and pushes Homebrew behind /usr/bin. `typeset -U` keeps PATH
 # de-duplicated so the re-assert is a no-op reorder. `homebrew_path` stays
 # defined for the same process so .zshrc can reuse it without duplication.
+# mise shims lead so fresh non-interactive zsh (cron, `ssh host cmd`, GUI apps)
+# honors per-repo tool pins over Homebrew.
 typeset -Ua homebrew_path=(
+  "$XDG_DATA_HOME/mise/shims"
   /opt/homebrew/bin
   /opt/homebrew/sbin
   "$HOME/.local/bin"
