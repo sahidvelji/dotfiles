@@ -37,6 +37,9 @@ export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
 # Stops /etc/zshrc_Apple_Terminal (Terminal.app only) recreating ~/.zsh_sessions.
 export SHELL_SESSIONS_DISABLE=1
 
+# Claude Code runs this script before each Bash command.
+export CLAUDE_ENV_FILE="$ZDOTDIR/claude-env.zsh"
+
 # Homebrew (hardcoded — avoids a `brew shellenv` subprocess).
 export HOMEBREW_PREFIX="/opt/homebrew"
 export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
