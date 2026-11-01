@@ -27,5 +27,6 @@
   "fallbackModel": [
     "sonnet"
   ],
-  "autoContinueAtUsageLimit": true
+  "autoContinueAtUsageLimit": true,
+  "cleanupPeriodDays": 365
 }
