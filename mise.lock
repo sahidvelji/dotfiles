@@ -13,14 +13,14 @@ url = "https://github.com/Kampfkarren/selene/releases/download/0.32.0/selene-0.3
 url_api = "https://api.github.com/repos/Kampfkarren/selene/releases/assets/604285189"
 
 [[tools."aqua:owenlamont/ryl"]]
-version = "0.27.0"
+version = "0.28.0"
 backend = "aqua:owenlamont/ryl"
-specifiers = ["0.27.0"]
+specifiers = ["0.28.0"]
 
 [tools."aqua:owenlamont/ryl"."platforms.macos-arm64"]
-checksum = "sha256:a503a54647f72bb66eb48f2418b11f1d3baf4ef64bd83f80486feea9cf7f431b"
-url = "https://github.com/owenlamont/ryl/releases/download/v0.27.0/ryl-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/owenlamont/ryl/releases/assets/692188474"
+checksum = "sha256:a1120c6b6974bd63198eb2fd06cf8f220620d0aa3f4348634fbe7d04dd74c602"
+url = "https://github.com/owenlamont/ryl/releases/download/v0.28.0/ryl-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/owenlamont/ryl/releases/assets/697422441"
 provenance = "github-attestations"
 
 [[tools.betterleaks]]
