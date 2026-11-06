@@ -16,7 +16,7 @@ run = 'brew bundle'
 "aqua:owenlamont/ryl" = "0.28.0"
 betterleaks = "1.9.0"
 biome = "2.6.2"
-hk = { version = "2.11.0", workflow = "release.yml" }
+hk = { version = "2.11.1", workflow = "release.yml" }
 jactionlint = { version = "v2.4.0", workflow = "release.yaml" }
 pkl = "0.32.2"
 rumdl = "v0.3.2"
