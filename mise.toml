@@ -14,7 +14,7 @@ run = 'brew bundle'
 [tools]
 "aqua:Kampfkarren/selene" = "0.32.0"
 "aqua:owenlamont/ryl" = "0.28.0"
-betterleaks = "1.9.0"
+betterleaks = "v1.10.0"
 biome = "2.6.2"
 hk = { version = "2.11.1", workflow = "release.yml" }
 jactionlint = { version = "v2.4.0", workflow = "release.yaml" }
