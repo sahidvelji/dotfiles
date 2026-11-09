@@ -18,7 +18,7 @@ betterleaks = "v1.10.0"
 biome = "2.6.2"
 hk = { version = "2.11.1", workflow = "release.yml" }
 jactionlint = { version = "v2.5.0", workflow = "release.yaml" }
-pkl = "0.32.2"
+pkl = "0.33.0"
 rumdl = "v0.3.2"
 shellcheck = "0.11.0"
 shfmt = "3.14.1"
