@@ -3,52 +3,48 @@ return {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
-        "bash",
         "csv",
         "editorconfig",
-        "git_config",
-        "git_rebase",
-        "gitattributes",
-        "gitignore",
         "gotmpl",
         "hcl",
-        "html",
         "http",
         "hurl",
         "jq",
         "make",
-        "toml",
         "zsh",
       },
     },
   },
+  -- Language servers and tools come from mise and Homebrew on PATH.
+  { "mason-org/mason.nvim", enabled = false },
+  { "mason-org/mason-lspconfig.nvim", enabled = false },
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- rumdl comes from Homebrew, not Mason.
-        rumdl = { mason = false },
+        rumdl = {},
+        gopls = {
+          settings = {
+            gopls = {
+              hints = {
+                assignVariableTypes = false,
+                compositeLiteralFields = false,
+                compositeLiteralTypes = false,
+                constantValues = false,
+                functionTypeParameters = false,
+                parameterNames = false,
+                rangeVariableTypes = false,
+              },
+            },
+          },
+        },
       },
     },
   },
   {
     "ruifm/gitlinker.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("gitlinker").setup({
-        opts = {
-          remote = nil, -- force the use of a specific remote
-          -- adds current line nr in the url for normal mode
-          add_current_line_on_normal_mode = true,
-          -- callback for what to do with the url
-          action_callback = require("gitlinker.actions").copy_to_clipboard,
-          -- print the url after performing the action
-          print_url = true,
-        },
-        -- default mapping to call url generation with action_callback
-        mappings = "<leader>gy",
-      })
-    end,
+    opts = {},
   },
   {
     "tpope/vim-abolish",
