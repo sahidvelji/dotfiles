@@ -117,6 +117,15 @@ s() {
 
 # Check out a pull request and hand it to Claude for review. Takes anything
 # `gh pr view` accepts (URL, number inside a repo); falls back to the clipboard.
+# Always uses the repo the PR targets, never the fork: `gh pr checkout` fetches
+# the head ref (refs/pull/N/head) through the API, so a fork is never cloned or
+# added as a remote even for a cross-fork PR.
+#
+# The review runs in a detached worktree at <clone>/.claude/worktrees/pr-N, so
+# the clone's own checkout is never touched and no local branch is claimed: git
+# lets a branch live in only one worktree, so checking out the PR's branch fails
+# whenever another worktree already holds it. `repos-tidy` removes the worktree
+# once the PR is no longer open.
 review-pr() {
   local input="${1:-$(pbpaste)}"
   [ -n "$input" ] || {
@@ -124,22 +133,57 @@ review-pr() {
     return 1
   }
 
-  # gh resolves any accepted form to the base repo's canonical URL, so a
-  # cross-fork PR still resolves to the upstream owner/repo.
-  local canonical
-  canonical="$(gh pr view "$input" --json url --jq .url)" || return
+  # gh normalizes any accepted form to the base repo's canonical URL,
+  # https://github.com/OWNER/REPO/pull/N — so OWNER/REPO is the base even for a
+  # cross-fork PR. There is no baseRepository JSON field, hence deriving it from
+  # the URL. Captured before the read: read's own status would mask a gh failure.
+  local out
+  out="$(gh pr view "$input" --json url,number \
+    --jq '"\(.url | sub("https://github.com/";"") | sub("/pull/.*";"")) \(.number)"')" || return
+  local owner_repo number
+  read -r owner_repo number <<<"$out"
+  local repo="${owner_repo#*/}"
 
-  local owner_repo="${${canonical#https://github.com/}%/pull/*}"
-  local number="${canonical##*/}"
-  local dir="$HOME/repos/${owner_repo#*/}"
-
+  local dir="$HOME/repos/$repo"
   [ -d "$dir" ] || gh repo clone "$owner_repo" "$dir" || return
+  # ~/repos is keyed by repo name alone, so an existing clone may belong to a
+  # same-named repo under another owner. Any remote counts: on a fork clone the
+  # base repo is `upstream`, not origin.
+  git -C "$dir" remote --verbose |
+    grep --quiet --ignore-case --extended-regexp \
+      "github\.com[:/]${owner_repo//./\\.}(\.git)?[[:space:]]" || {
+    print -u2 "review-pr: $dir has no remote for $owner_repo"
+    return 1
+  }
   cd "$dir" || return
 
-  # `gh pr checkout` fetches refs/pull/N/head through the API, so the fork of a
-  # cross-fork PR is never cloned or added as a remote.
-  gh pr checkout "$number" || return
-
-  claude "/review $number"
+  # A worktree whose directory was deleted stays registered and blocks re-adding
+  # it. An existing pr-N worktree is updated in place, keeping uncommitted
+  # edits, but only while it sits at the reviewed commit: moving HEAD would
+  # strand commits made there since.
+  local wt="$dir/.claude/worktrees/pr-$number" record reviewed
+  git worktree prune
+  if [ -d "$wt" ]; then
+    record="$(git -C "$wt" rev-parse --absolute-git-dir)/review-pr-repo"
+    [ -f "$record" ] || {
+      print -u2 "review-pr: $wt has no review-pr record; check it, then: git -C $dir worktree remove $wt"
+      return 1
+    }
+    read -r _ reviewed <"$record"
+    [[ "$(git -C "$wt" rev-parse HEAD)" == "$reviewed" ]] || {
+      print -u2 "review-pr: $wt has moved off the reviewed commit; save or discard that work first"
+      return 1
+    }
+  fi
+  gh pr checkout "$number" --repo "$owner_repo" --detach --worktree "$wt" || return
+  cd "$wt" || return
+  # Bare PR numbers resolve against gh's default repo for the clone, which on a
+  # multi-remote clone need not be $owner_repo, so repos-tidy reads the repo
+  # from this record, along with the reviewed commit. It lives in the
+  # worktree's git dir, so it goes away with the worktree.
+  print -r -- "$owner_repo $(git rev-parse HEAD)" >"$(git rev-parse --absolute-git-dir)/review-pr-repo" || return
+  # The session name becomes the terminal title, telling parallel reviews apart.
+  claude --name "review $repo#$number" \
+    "/code-review xhigh https://github.com/$owner_repo/pull/$number"
 }
 alias rp="review-pr"
