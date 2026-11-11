@@ -102,7 +102,7 @@ Either way, `mise dot apply` then re-points the link.
 ```bash
 mise bootstrap status            # dotfiles, preferences, login shell, tools
 mise bootstrap status --missing  # same listing, exit 1 if anything drifted
-mise dot status                  # dotfile entries only, plus history state
+mise dot status                  # dotfile entries only
 mise dot apply --dry-run         # what an apply would change (add --verbose)
 ```
 
