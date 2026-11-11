@@ -81,6 +81,9 @@
 
 [delta]
 	line-numbers = true
+	# Jump between files in the pager with n / N
+	navigate = true
+
 [hook "hk-commit-msg"]
 	command = test \"${HK:-1}\" = \"0\" || /opt/homebrew/bin/mise x hk -- hk run commit-msg --from-hook
 	event = commit-msg
