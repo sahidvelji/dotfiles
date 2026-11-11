@@ -13,9 +13,12 @@
 #   - fast-forwards the default branch (skipped when the worktree is dirty,
 #     and done without a checkout when sitting on a feature branch)
 #   - hands local-branch pruning to gh-poi
+#   - removes review-pr's .claude/worktrees/pr-N worktrees once the PR is no
+#     longer open and nothing in them but ignored files would be lost
 #
-# With no arguments it tidies the repo you are standing in, or every repo when
-# run from outside one. Name repos to scope it, or pass --all.
+# With no arguments it tidies the repo you are standing in (or the clone a
+# .claude/worktrees worktree belongs to), or every repo when run from outside
+# one. Name repos to scope it, or pass --all.
 
 set -uo pipefail
 
@@ -71,6 +74,44 @@ if [[ "${1-}" == "__one" ]]; then
   [[ -n $tracking ]] || tracking="origin/$default"
   src=""
   [[ ${tracking%%/*} == origin ]] || src=" (${tracking%%/*})"
+
+  # Branch-attached worktrees never reach the detached arm, so a review that
+  # turned into a fix is kept. A HEAD off the commit review-pr recorded means
+  # local commits, which removing the worktree would strand. Worktrees nested
+  # under .claude/worktrees are globally ignored, so git would delete one with
+  # the outer worktree. git itself refuses to remove a dirty worktree.
+  ((dry_run)) || git worktree prune
+  worktrees="$(git worktree list --porcelain)"
+  wt_paths=$'\n'"$(sed -n 's/^worktree //p' <<<"$worktrees")"
+  wt_path="" wt_head=""
+  while IFS= read -r line; do
+    case $line in
+      "worktree "*) wt_path="${line#worktree }" ;;
+      "HEAD "*) wt_head="${line#HEAD }" ;;
+      detached)
+        [[ $wt_path =~ /\.claude/worktrees/pr-([0-9]+)$ ]] || continue
+        pr="${BASH_REMATCH[1]}"
+        record="$(git -C "$wt_path" rev-parse --absolute-git-dir 2>/dev/null)/review-pr-repo"
+        [[ -f $record ]] || continue
+        read -r base reviewed <"$record"
+        state="$(gh pr view "$pr" --repo "$base" --json state --jq .state 2>/dev/null)"
+        [[ $state == OPEN ]] && continue
+        if [[ -z $state ]]; then
+          status+=("pr-$pr worktree kept (PR state unknown)")
+        elif [[ $wt_head != "$reviewed" ]]; then
+          status+=("pr-$pr worktree kept (moved off the reviewed commit)")
+        elif [[ $wt_paths == *$'\n'"$wt_path"/* ]]; then
+          status+=("pr-$pr worktree kept (holds a nested worktree)")
+        elif ((dry_run)); then
+          status+=("would remove pr-$pr worktree")
+        elif git worktree remove "$wt_path" 2>/dev/null; then
+          status+=("removed pr-$pr worktree")
+        else
+          status+=("pr-$pr worktree kept (dirty or locked)")
+        fi
+        ;;
+    esac
+  done <<<"$worktrees"
 
   # gh-poi refuses to delete the branch you are standing on, so a repo left
   # on a branch whose PR has merged never gets pruned. Step off it, but only
@@ -178,7 +219,9 @@ if [[ -n ${usage_repo:-} ]]; then
     fi
   done
 elif [[ $all != "true" ]] && toplevel="$(git rev-parse --show-toplevel 2>/dev/null)"; then
-  repos=("$toplevel")
+  # A worktree under .claude/worktrees (e.g. a review-pr one) resolves to the
+  # clone it lives in.
+  repos=("${toplevel%%/.claude/worktrees/*}")
 else
   for dir in "$REPOS_ROOT"/*/; do
     [[ -d "${dir}.git" ]] && repos+=("${dir%/}")

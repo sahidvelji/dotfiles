@@ -4,3 +4,7 @@
 # Personal, machine-local tool config — never committed
 mise.local.toml
 mise.*.local.toml
+hk.local.pkl
+
+# Claude Code worktrees (EnterWorktree and review-pr)
+**/.claude/worktrees/

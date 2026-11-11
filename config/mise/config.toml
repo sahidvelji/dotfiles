@@ -1,6 +1,10 @@
 [settings.dotfiles]
 root = "~/repos/dotfiles"
 
+# The dotfile groups symlink into this git repo, which already keeps the history.
+[settings.history]
+enabled = false
+
 # gh keeps its token in the macOS Keychain, where mise cannot read it, so ask gh
 # when mise needs one.
 [settings.github]

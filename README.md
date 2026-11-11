@@ -102,7 +102,7 @@ Either way, `mise dot apply` then re-points the link.
 ```bash
 mise bootstrap status            # dotfiles, preferences, login shell, tools
 mise bootstrap status --missing  # same listing, exit 1 if anything drifted
-mise dot status                  # dotfile entries only, plus history state
+mise dot status                  # dotfile entries only
 mise dot apply --dry-run         # what an apply would change (add --verbose)
 ```
 
@@ -212,6 +212,16 @@ when the repo is sitting on a feature branch.
 Local-branch pruning is delegated to
 [`gh-poi`](https://github.com/seachicken/gh-poi),
 which deletes branches whose pull request has merged.
+
+It also removes the detached `.claude/worktrees/pr-N` worktrees
+that the `review-pr` shell function reviews in,
+once the PR is no longer open.
+It keeps any that are dirty, on a branch,
+moved off the reviewed commit or holding another worktree,
+and any whose PR state gh cannot fetch.
+Ignored files in a removed worktree, such as build output, go with it.
+`git worktree prune` first drops the registration
+of any worktree whose directory was deleted.
 
 Two details worth knowing:
 

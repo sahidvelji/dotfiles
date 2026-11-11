@@ -10,12 +10,7 @@ keybind = alt+k=scroll_page_lines:-1
 
 # --- Shell Integration -------------------------------------------------------
 
-# Auto-detect shell and inject integration.
-# Enables: working directory inheritance, prompt marking, smart close, better resize.
-shell-integration = detect
-
 # no-cursor: zsh's vi-mode block owns the cursor shape (it works in any
 #   terminal); `cursor` is on by default, so it must be turned off explicitly.
 # sudo: preserves Ghostty integration in elevated shells.
-# title: sets terminal title from shell context.
-shell-integration-features = no-cursor,sudo,title
+shell-integration-features = no-cursor,sudo
