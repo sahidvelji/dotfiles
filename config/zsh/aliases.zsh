@@ -57,7 +57,6 @@ alias \
 alias b="bat"
 alias c="claude"
 alias ch="claude-history"
-alias lg="lazygit"
 
 # Functions
 
@@ -69,6 +68,16 @@ f() {
     builtin cd -- "$cwd"
   fi
   command rm -f -- "$tmp" # bypass the rm alias, whose -v echoes the path
+}
+
+# Lazygit cd-on-exit, following repo and worktree switches: q quits and cds, Q quits without cd
+lg() {
+  local tmp="$(mktemp -t "lazygit-cwd.XXXXXX")" cwd
+  LAZYGIT_NEW_DIR_FILE="$tmp" lazygit "$@"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  command rm -f -- "$tmp"
 }
 
 cpf() { cp "$@" && cd "$_" && ll; }
