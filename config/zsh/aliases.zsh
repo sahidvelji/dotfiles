@@ -55,6 +55,7 @@ alias \
 
 # Tool Aliases
 alias b="bat"
+alias boo="ghostty +boo"
 alias c="claude"
 alias ch="claude-history"
 
