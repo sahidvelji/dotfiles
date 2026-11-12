@@ -54,6 +54,14 @@ append this as the last line:
 
 `*AI-assisted — Tool: <tool>; model: <provider>/<model>; version: <version>.*`
 
+Per *piece of prose*, not per operation.
+A multi-comment review needs the line on the review body
+**and** on each inline comment —
+every comment is independently visible
+in notification emails and the Files-changed view,
+so a reader of one thread must see it there.
+Same for a batch of issue comments or several PRs in one turn.
+
 - **Tool** — harness name: `Claude Code`, `Codex`.
 - **Model** — what the harness reports for the session,
   verbatim after the `anthropic/` prefix,
@@ -95,6 +103,16 @@ In shell scripts and functions committed to a repo,
 always use full-length flags (`--type file`, not `-t f`).
 Short flags are harder to read at a glance.
 This does not apply to throwaway commands run in a terminal.
+
+## Comments and Names
+
+Code describes the system as it is now.
+Comments and identifiers must not narrate migration history
+or name retired systems, routes or behaviour —
+no "kept for compatibility with the old service",
+no `legacy…` names for what is now the only path.
+That context goes in the commit message and PR body.
+Choose names that make sense to a reader who never saw the old design.
 
 ## Markdown Style
 
