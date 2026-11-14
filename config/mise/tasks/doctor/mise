@@ -3,8 +3,9 @@
 #MISE dir="~"
 set -uo pipefail
 
-out=$(mise doctor 2>&1)
+out=$(mise doctor --json)
 rc=$?
-# The summary starts at "N warnings found:" or "No problems found".
-awk '/ found/ { summary = 1 } summary' <<<"$out"
+jq --raw-output '
+  (.warnings // [])[] as $warning | "warning: \($warning)",
+  (.errors // [])[] as $error | "error: \($error)"' <<<"$out"
 exit "$rc"

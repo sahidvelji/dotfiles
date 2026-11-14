@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Update Neovim plugins with Lazy"
+# After brew, which can upgrade neovim itself mid-run.
+#MISE wait_for=["update:brew"]
 set -euo pipefail
 # Lazy rewrites config/nvim/lazy-lock.json; the change is left to review and commit.
 nvim --headless "+Lazy! update" +qa

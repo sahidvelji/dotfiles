@@ -212,6 +212,9 @@ The `Brewfile` tracks installed Homebrew packages (taps, formulae, casks).
 It lives at `config/homebrew/Brewfile`
 and is symlinked to `~/.config/homebrew/Brewfile`
 (the XDG location `brew bundle --global` reads).
+The global mise config points `HOMEBREW_BUNDLE_FILE` at the repo copy,
+so a plain `brew bundle` reads it from any directory,
+even before the symlink exists.
 
 ```bash
 mise run capture:brew   # update Brewfile with currently installed packages

@@ -3,5 +3,4 @@
 set -euo pipefail
 # Naming the dumpers leaves out the rest (mas, vscode, go, cargo, npm, …), so
 # those ecosystems stay owned by their own tools, such as mise.
-brew bundle dump --force --file "$HOME/repos/dotfiles/config/homebrew/Brewfile" \
-  --no-describe --tap --formula --cask
+brew bundle dump --force --no-describe --tap --formula --cask
