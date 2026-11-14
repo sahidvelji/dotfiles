@@ -56,11 +56,26 @@ cd ~/repos/dotfiles
 mise trust                 # required: mise refuses to load an untrusted config
 mise run brew-install      # install Homebrew packages
 mise trust config/mise/config.toml
-mise -C config bootstrap   # dotfiles, macOS defaults, login shell, tools
+mise -C config bootstrap   # repos, dotfiles, macOS defaults, login shell, tools
 ```
 
 Order matters: the declared Dock layout names applications by path,
 and mise refuses to apply a layout naming an app that is not installed yet.
+mise also checks every macOS default before writing any,
+so a single missing Dock app means no defaults are written at all
+and the bootstrap stops there.
+
+The bootstrap also clones every repo listed in
+`config/mise/conf.d/repos.toml` into `~/repos`.
+It only clones each repo's `origin`,
+so uncommitted work, unpushed branches
+and other remotes (such as a fork's `upstream`) are not restored.
+Refresh the list with `mise run capture:repos`
+after cloning or removing a repo, then commit it.
+
+On a machine that already has the repos,
+`mise bootstrap` refuses to run while any of them has local changes;
+pass `--skip-dirty` to skip those repos with a warning instead.
 
 The global config is not linked into `~/.config/mise` yet,
 so the first bootstrap runs from `config/`,
@@ -100,7 +115,7 @@ Either way, `mise dot apply` then re-points the link.
 ## Checking state
 
 ```bash
-mise bootstrap status            # dotfiles, preferences, login shell, tools
+mise bootstrap status            # repos, dotfiles, preferences, login shell, tools
 mise bootstrap status --missing  # same listing, exit 1 if anything drifted
 mise dot status                  # dotfile entries only
 mise dot apply --dry-run         # what an apply would change (add --verbose)
@@ -155,6 +170,11 @@ it only buries the settings that carry real intent.
 Values are strictly typed:
 an integer `1` does not satisfy a declared `true`,
 nor a plist real a declared integer.
+
+Note that `defaults read` reporting a key as unset
+does not mean mise will see it as unset:
+mise reads the resolved preference chain,
+so a key can already be in effect.
 
 There is no capture command —
 nothing plays `brew bundle dump` to `brew bundle`.
@@ -239,6 +259,15 @@ Repos with a detached HEAD are reported and skipped.
 The default branch is refreshed from whatever it actually tracks,
 which in a fork is `upstream` rather than the fork's own `origin`.
 
+`capture:repos` writes the git checkouts under `~/repos`
+to `config/mise/conf.d/repos.toml`
+for `mise bootstrap` to clone on a new machine:
+
+```bash
+mise run capture:repos            # rewrite conf.d/repos.toml
+mise run capture:repos --dry-run  # print it instead
+```
+
 A new task file needs `mise dot apply` before it is runnable from elsewhere.
 
 ## Linting
@@ -275,7 +304,9 @@ because those paths have no source in the repo.
 - `claude/statusline-command.sh` — the status line renderer
   that `settings.json` points at
 
-Editing any of these takes effect in the next session,
-since their `~/.claude` counterparts are symlinks.
+Their `~/.claude` counterparts are symlinks,
+so edits to `settings.json` and the status line script
+apply to running sessions,
+while `CLAUDE.md` and rule edits take effect in the next session.
 Adding a new file under `claude/`
 needs `mise dot apply` before Claude Code will see it.
