@@ -2,11 +2,6 @@
 #MISE description="Write the git checkouts under ~/repos to conf.d/repos.toml for mise bootstrap to clone"
 #USAGE flag "-n --dry-run" help="Print the generated file instead of writing it"
 #
-# Records each git repo directly under ~/repos as a [bootstrap.repos] entry,
-# so `mise bootstrap` clones it on a new machine. Only each repo's origin URL
-# is recorded: uncommitted work, unpushed branches and other remotes (such as
-# a fork's upstream) are not restored.
-#
 # The table lives in its own conf.d file so config.toml stays hand-written.
 # It writes the repo copy, so it works before ~/.config/mise is linked.
 #
@@ -17,15 +12,11 @@ set -euo pipefail
 
 dest="$HOME/repos/dotfiles/config/mise/conf.d/repos.toml"
 
-# dotfiles is cloned by hand before the first bootstrap.
-skip=(dotfiles)
-
 entries=()
 for dir in "$HOME"/repos/*/; do
   dir="${dir%/}"
   name="${dir##*/}"
   [[ -d "$dir/.git" ]] || continue
-  [[ " ${skip[*]} " == *" $name "* ]] && continue
   url="$(git -C "$dir" remote get-url origin 2>/dev/null)" || continue
   entries+=("\"~/repos/$name\" = { url = \"$url\" }")
 done

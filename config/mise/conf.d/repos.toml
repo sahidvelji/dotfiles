@@ -4,6 +4,7 @@
 "~/repos/betterleaks" = { url = "https://github.com/betterleaks/betterleaks.git" }
 "~/repos/cli" = { url = "https://github.com/open-feature/cli.git" }
 "~/repos/community-tooling" = { url = "https://github.com/sahidvelji/community-tooling.git" }
+"~/repos/dotfiles" = { url = "https://github.com/sahidvelji/dotfiles.git" }
 "~/repos/go-sdk" = { url = "https://github.com/open-feature/go-sdk.git" }
 "~/repos/go-sdk-contrib" = { url = "https://github.com/open-feature/go-sdk-contrib.git" }
 "~/repos/hk" = { url = "https://github.com/sahidvelji/hk.git" }
