@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Check that this machine matches the dotfiles (every doctor:* check)"
+# Not `depends`: the first failing dependency kills its running siblings,
+# and a doctor should report every check.
+exec mise run --continue-on-error --output keep-order 'doctor:*'

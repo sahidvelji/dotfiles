@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="Write this machine's repos and Homebrew packages into the dotfiles, then show what changed"
+# Deliberately manual (not a git hook): these read live machine state (~/repos,
+# installed brews), so running them automatically would pollute unrelated
+# commits and let whichever machine committed last clobber the others.
+# Not `depends`: a failing dependency kills its running siblings.
+rc=0
+mise run --continue-on-error --output keep-order 'capture:*' || rc=1
+git -C ~/repos/dotfiles status --short -- config/mise/conf.d/repos.toml config/homebrew/Brewfile
+echo "capture: review any changes above and commit from ~/repos/dotfiles"
+exit "$rc"

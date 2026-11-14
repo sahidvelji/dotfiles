@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE description="Upgrade Homebrew packages, mise tools, Neovim plugins and Claude plugins"
+# Not `depends`: a failing dependency kills its running siblings mid-upgrade.
+exec mise run --continue-on-error --output keep-order 'update:*'

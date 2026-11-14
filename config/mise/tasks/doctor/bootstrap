@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#MISE description="Check that dotfiles, macOS defaults, repos and tools match the [bootstrap] config"
+#MISE dir="~"
+set -uo pipefail
+
+# --missing still lists every entry, so show only the ones not in a settled state.
+if status=$(mise bootstrap status --missing --json); then
+  echo "bootstrap: everything matches the config"
+  exit 0
+fi
+jq --raw-output \
+  --argjson settled '["absent", "applied", "current", "installed", "loaded", "set", "skipped", "tracked"]' '
+  paths(objects | has("state")) as $path
+  | getpath($path)
+  | select(.state as $state | $settled | index($state) | not)
+  | "\($path[0])\t\(.state)\t\(del(.state) | tostring)"' <<<"$status"
+exit 1

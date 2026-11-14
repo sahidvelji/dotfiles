@@ -8,8 +8,8 @@ deployed into the matching dot-directory of `$HOME`
 The groups, `[dotfiles]` and `[bootstrap]` live in the global mise config,
 `config/mise/config.toml`.
 Homebrew packages stay in `config/homebrew/Brewfile`,
-installed with `mise run brew-install`
-and refreshed with `mise run brew-dump`.
+installed with `mise run install:brew`
+and refreshed with `mise run capture:brew`.
 See `README.md` for the user-facing workflow.
 
 Because the groups symlink each file,

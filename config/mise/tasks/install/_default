@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE description="Install what the [bootstrap] sections don't declare, without upgrading anything"
+# Not `depends`: a failing dependency kills its running siblings mid-install.
+exec mise run --continue-on-error --output keep-order 'install:*'
