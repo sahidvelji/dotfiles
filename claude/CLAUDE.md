@@ -9,11 +9,17 @@
   typically `.github/PULL_REQUEST_TEMPLATE.md`.
 - Always open pull requests as drafts (`gh pr create --draft`).
   Mark a PR ready for review only when I ask.
-- Keep PR descriptions moderate in length —
-  a few short sections covering what changed, why,
-  and anything a reviewer genuinely needs to know.
-  Section headers are fine.
+- Keep PR bodies terse:
+  fill the template's sections concisely,
+  explain *why*, not *what*,
+  and don't restate the diff or the linked issue.
+  Keep it to about 10 lines
+  and skip "Review focus"-style sections
+  unless the template requires them,
+  and spell out acronyms.
   Never paste test output; say what is covered instead.
+- Keep PRs under about 400 changed lines,
+  or explain in the body why the change can't be split.
 - When pushing new commits to a branch with an open PR,
   check whether the PR body still describes the changes accurately.
   Update it only if the new commits materially change what the PR does.
@@ -94,8 +100,9 @@ the wrapper may set required env vars, flags, or paths.
 
 ## Binary Installation
 
-Prefer `mise use` for installing binaries from GitHub releases.
-Do not use `gh release download` directly or edit `mise.toml` by hand.
+Install binaries from GitHub releases with `mise use`
+(`-g` outside a project), which records the pin itself;
+don't fetch them with `gh release download` or hand-edit tool pins.
 
 ## Shell Script Style
 
