@@ -131,12 +131,12 @@ url_api = "https://api.github.com/repos/tombi-toml/tombi/releases/assets/7256320
 provenance = "github-attestations"
 
 [[tools.typos]]
-version = "1.52.1"
+version = "1.52.2"
 backend = "aqua:crate-ci/typos"
-specifiers = ["1.52.1"]
+specifiers = ["1.52.2"]
 
 [tools.typos."platforms.macos-arm64"]
-checksum = "sha256:e342c1ec32ea6f60a8b557cd75f30e7c604745131754acff295402a0a3d43263"
+checksum = "sha256:b8e7b8b81f28cc808fd763b6d935536e15ba1ef72613bbb6d628b58a891da7ef"
 checksum_source = "mise-versions"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.1/typos-v1.52.1-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/728885543"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733789873"
