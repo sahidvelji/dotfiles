@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#MISE description="Refresh Claude Code marketplaces and update every installed plugin"
+#MISE dir="~"
+set -uo pipefail
+
+claude plugin marketplace update || exit 1
+
+rc=0
+# Project and local plugins resolve their scope from the project directory.
+# Managed plugins belong to the administrator, so they are left alone.
+while IFS=$'\t' read -r id scope dir; do
+  (cd "${dir:-$HOME}" && claude plugin update --scope "$scope" "$id") || rc=1
+done < <(claude plugin list --json | jq --raw-output '
+  map(select(.scope == "user" or .scope == "project" or .scope == "local"))
+  | unique_by([.id, .scope, .projectPath])[]
+  | [.id, .scope, (.projectPath // "")] | @tsv')
+exit "$rc"

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Update Neovim plugins with Lazy"
+set -euo pipefail
+# Lazy rewrites config/nvim/lazy-lock.json; the change is left to review and commit.
+nvim --headless "+Lazy! update" +qa

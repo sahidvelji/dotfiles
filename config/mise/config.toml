@@ -148,6 +148,12 @@ value = true
 [bootstrap.hooks.post-defaults]
 run = "killall Dock ControlCenter || true"
 
+# mise bootstrap runs this task last, once tools are installed; steps go here
+# rather than in hooks, which run without [tools] on PATH.
+[tasks.bootstrap]
+description = "Machine setup the declarative [bootstrap] sections don't cover"
+depends = ["install"]
+
 [task_config]
 dir = "{{cwd}}"
 

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Write the installed Homebrew taps, formulae and casks to the Brewfile"
+set -euo pipefail
+# Naming the dumpers leaves out the rest (mas, vscode, go, cargo, npm, …), so
+# those ecosystems stay owned by their own tools, such as mise.
+brew bundle dump --force --file "$HOME/repos/dotfiles/config/homebrew/Brewfile" \
+  --no-describe --tap --formula --cask

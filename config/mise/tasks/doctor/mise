@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Run mise doctor, showing only its warnings and problems"
+#MISE dir="~"
+set -uo pipefail
+
+out=$(mise doctor 2>&1)
+rc=$?
+# The summary starts at "N warnings found:" or "No problems found".
+awk '/ found/ { summary = 1 } summary' <<<"$out"
+exit "$rc"

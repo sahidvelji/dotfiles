@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE description="Upgrade mise tools within their configured versions"
+set -euo pipefail
+mise upgrade --global

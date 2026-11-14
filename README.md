@@ -25,9 +25,8 @@ and Homebrew (system packages).
   linking every leaf file into the target)
 - The same config declares macOS preferences under `[bootstrap.macos]`
 - Homebrew packages live in `config/homebrew/Brewfile`
-  and install via `mise run brew-install`
-- `mise.toml` defines a few small tasks scoped to this repo
-  and pins the lint tools,
+  and install via `mise run install:brew`
+- `mise.toml` pins the lint tools,
   and `config/mise/tasks/` holds global tasks that run from anywhere
 - `hk.pkl` lints and formats every commit
   and the `lint` workflow runs it in CI
@@ -54,10 +53,14 @@ brew install mise
 git clone https://github.com/sahidvelji/dotfiles.git ~/repos/dotfiles
 cd ~/repos/dotfiles
 mise trust                 # required: mise refuses to load an untrusted config
-mise run brew-install      # install Homebrew packages
 mise trust config/mise/config.toml
+mise -C config run --skip-tools install:brew  # install Homebrew packages
 mise -C config bootstrap   # repos, dotfiles, macOS defaults, login shell, tools
 ```
+
+`--skip-tools` stops `mise run` from installing every `[tools]` entry
+before Homebrew has installed `gh`,
+which the `github:` tools need for their token.
 
 Order matters: the declared Dock layout names applications by path,
 and mise refuses to apply a layout naming an app that is not installed yet.
@@ -119,7 +122,20 @@ mise bootstrap status            # repos, dotfiles, preferences, login shell, to
 mise bootstrap status --missing  # same listing, exit 1 if anything drifted
 mise dot status                  # dotfile entries only
 mise dot apply --dry-run         # what an apply would change (add --verbose)
+mise run doctor                  # every doctor:* check
+mise run update                  # upgrade brew, mise tools, nvim and Claude plugins
+mise run install                 # install what is missing, upgrading nothing
+mise run capture                 # write this machine's repos and brews back here
 ```
+
+Each of the last four runs every task in its family
+and keeps going past a failed step.
+`mise bootstrap` ends with `install`.
+`update:nvim` leaves the `lazy-lock.json` change for you to commit.
+`capture` is deliberately manual:
+it reads live machine state,
+so running it from a hook would let whichever machine committed last
+clobber the others.
 
 ## Day-to-day workflow
 
@@ -176,7 +192,7 @@ does not mean mise will see it as unset:
 mise reads the resolved preference chain,
 so a key can already be in effect.
 
-There is no capture command —
+mise has no capture command for defaults —
 nothing plays `brew bundle dump` to `brew bundle`.
 Going the other way is hand-editing,
 with `defaults read <domain> <key>` and `defaults read-type` for the value
@@ -196,21 +212,17 @@ The `Brewfile` tracks installed Homebrew packages (taps, formulae, casks).
 It lives at `config/homebrew/Brewfile`
 and is symlinked to `~/.config/homebrew/Brewfile`
 (the XDG location `brew bundle --global` reads).
-The tasks below run in the repo's `config/homebrew` directory instead,
-so they work on a fresh Mac before that symlink exists.
 
 ```bash
-mise run brew-dump      # update Brewfile with currently installed packages
-mise run brew-install   # install packages from Brewfile
+mise run capture:brew   # update Brewfile with currently installed packages
+mise run install:brew   # install missing packages from Brewfile
+mise run update:brew    # upgrade installed packages
 ```
 
-Run `mise run brew-dump` before committing to capture any new brew packages.
+Run `mise run capture:brew` before committing to capture any new brew packages.
 
 ## Tasks
 
-`mise.toml` at the repo root holds tasks scoped to this repo
-(`brew-dump`, `brew-install`);
-they are only visible from inside it.
 `config/mise/tasks/` holds global file tasks,
 symlinked into `~/.config/mise/tasks/`,
 so they run from any directory.
