@@ -157,11 +157,6 @@ depends = ["install"]
 [task_config]
 dir = "{{cwd}}"
 
-# brew bundle reads the repo's Brewfile without --file. The repo path, not the
-# ~/.config/homebrew link: on a fresh Mac the tasks run before it exists.
-[env]
-HOMEBREW_BUNDLE_FILE = "{{env.HOME}}/repos/dotfiles/config/homebrew/Brewfile"
-
 [tools]
 "github:open-feature/cli" = "latest"
 "github:seachicken/gh-poi" = { version = "latest", bin = "gh-poi" }

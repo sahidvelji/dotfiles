@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 #MISE description="Install missing Brewfile packages"
 set -euo pipefail
+# The repo path, not --global: on a fresh Mac this runs before ~/.config is linked.
+brewfile="$HOME/repos/dotfiles/config/homebrew/Brewfile"
 # check is quick; install walks every formula and cask even when none is missing.
-brew bundle check --no-upgrade --quiet || brew bundle install --no-upgrade
+brew bundle check --file "$brewfile" --no-upgrade --quiet ||
+  brew bundle install --file "$brewfile" --no-upgrade
