@@ -56,11 +56,19 @@ cd ~/repos/dotfiles
 mise trust                 # required: mise refuses to load an untrusted config
 mise run brew-install      # install Homebrew packages
 mise trust config/mise/config.toml
-mise -C config bootstrap   # dotfiles, macOS defaults, login shell, tools
+mise -C config bootstrap   # repos, dotfiles, macOS defaults, login shell, tools
 ```
 
 Order matters: the declared Dock layout names applications by path,
 and mise refuses to apply a layout naming an app that is not installed yet.
+
+The bootstrap also clones every repo listed in
+`config/mise/conf.d/repos.toml` into `~/repos`.
+It only clones each repo's `origin`,
+so uncommitted work, unpushed branches
+and other remotes (such as a fork's `upstream`) are not restored.
+Refresh the list with `mise run capture:repos`
+after cloning or removing a repo, then commit it.
 
 The global config is not linked into `~/.config/mise` yet,
 so the first bootstrap runs from `config/`,
@@ -202,6 +210,8 @@ mise run repos-tidy hk pklr               # only these, named by directory
 mise run repos-tidy --all --jobs 8        # ...eight at a time
 mise run repos-tidy --all --dry-run       # report only; touches nothing
 mise run repos-tidy --all --force-closed  # also prune unmerged closed PR branches
+mise run capture:repos                    # list ~/repos in conf.d/repos.toml
+mise run capture:repos --dry-run          # print the list instead of writing it
 ```
 
 For each repo it fetches every remote with `--prune`,
