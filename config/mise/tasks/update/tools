@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Upgrade mise tools within their configured versions"
+# After brew, which can relink gh, the github: tools' token source, mid-run.
+#MISE wait_for=["update:brew"]
+set -euo pipefail
+mise upgrade --global

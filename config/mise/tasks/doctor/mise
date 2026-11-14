@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="Run mise doctor, showing only its warnings and problems"
+#MISE dir="~"
+set -uo pipefail
+
+out=$(mise doctor --json)
+rc=$?
+jq --raw-output '
+  (.warnings // [])[] as $warning | "warning: \($warning)",
+  (.errors // [])[] as $error | "error: \($error)"' <<<"$out"
+exit "$rc"

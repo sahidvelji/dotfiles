@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE description="Upgrade Homebrew formulae and the casks that do not update themselves"
+set -euo pipefail
+brew upgrade --yes --fetch-HEAD

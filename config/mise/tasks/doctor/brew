@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE description="Check that every Brewfile package is installed"
+set -euo pipefail
+brew bundle check --file "$HOME/repos/dotfiles/config/homebrew/Brewfile" --no-upgrade --verbose
