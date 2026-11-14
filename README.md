@@ -72,6 +72,12 @@ so uncommitted work, unpushed branches
 and other remotes (such as a fork's `upstream`) are not restored.
 Refresh the list with `mise run capture:repos`
 after cloning or removing a repo, then commit it.
+Every listed repo must be cloneable from its `origin`,
+so keep scratch repos outside `~/repos`.
+
+On a machine that already has the repos,
+`mise bootstrap` refuses to run while any of them has local changes;
+pass `--skip-dirty` to skip those repos with a warning instead.
 
 The global config is not linked into `~/.config/mise` yet,
 so the first bootstrap runs from `config/`,
@@ -111,7 +117,7 @@ Either way, `mise dot apply` then re-points the link.
 ## Checking state
 
 ```bash
-mise bootstrap status            # dotfiles, preferences, login shell, tools
+mise bootstrap status            # repos, dotfiles, preferences, login shell, tools
 mise bootstrap status --missing  # same listing, exit 1 if anything drifted
 mise dot status                  # dotfile entries only
 mise dot apply --dry-run         # what an apply would change (add --verbose)
@@ -218,8 +224,6 @@ mise run repos-tidy hk pklr               # only these, named by directory
 mise run repos-tidy --all --jobs 8        # ...eight at a time
 mise run repos-tidy --all --dry-run       # report only; touches nothing
 mise run repos-tidy --all --force-closed  # also prune unmerged closed PR branches
-mise run capture:repos                    # list ~/repos in conf.d/repos.toml
-mise run capture:repos --dry-run          # print the list instead of writing it
 ```
 
 For each repo it fetches every remote with `--prune`,
@@ -256,6 +260,15 @@ Two details worth knowing:
 Repos with a detached HEAD are reported and skipped.
 The default branch is refreshed from whatever it actually tracks,
 which in a fork is `upstream` rather than the fork's own `origin`.
+
+`capture:repos` writes the git checkouts under `~/repos`
+to `config/mise/conf.d/repos.toml`
+for `mise bootstrap` to clone on a new machine:
+
+```bash
+mise run capture:repos            # rewrite conf.d/repos.toml
+mise run capture:repos --dry-run  # print it instead
+```
 
 A new task file needs `mise dot apply` before it is runnable from elsewhere.
 
