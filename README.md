@@ -72,8 +72,6 @@ so uncommitted work, unpushed branches
 and other remotes (such as a fork's `upstream`) are not restored.
 Refresh the list with `mise run capture:repos`
 after cloning or removing a repo, then commit it.
-Every listed repo must be cloneable from its `origin`,
-so keep scratch repos outside `~/repos`.
 
 On a machine that already has the repos,
 `mise bootstrap` refuses to run while any of them has local changes;
