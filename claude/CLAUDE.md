@@ -143,3 +143,50 @@ and the rendered output is the same either way.
 
 When reviewing diffs of semantic-line-break prose, use `git diff --word-diff`;
 default line-mode diffs obscure within-sentence edits.
+
+## Worktrees
+
+When a worktree is called for,
+put it in the repo's `.claude/worktrees/`
+or, for throwaway checkouts, `$TMPDIR` —
+never as a `../<repo>-<suffix>` sibling.
+
+- Session work: `EnterWorktree`.
+- Parallel subagents: the Agent tool's `isolation: "worktree"`.
+- Throwaway checkouts (e.g. `origin/main` for a lint comparison):
+  `git worktree add --detach $TMPDIR/<name> origin/<default-branch>`,
+  then `git worktree remove` it when done.
+
+## Workflow
+
+### Circuit Breaker
+
+If the first fix attempt fails or produces unexpected results,
+re-read the error output and reconsider the root cause before retrying.
+After two failed attempts at the same problem, **stop**.
+State what was tried, what failed, and ask for direction.
+Do not silently iterate.
+
+### Sync and Branch
+
+Before starting any work, sync with remote (`git fetch origin`)
+so you're working on an up-to-date codebase.
+In shared repos, never commit directly to main —
+always create a branch first.
+
+### Prefer Cloning Over Repeated `gh api` Calls
+
+When you need to examine a repo's contents (README, source, docs),
+clone it to `~/repos/` rather than using `gh api` or `gh repo view` repeatedly.
+Cloning once lets you read files directly
+instead of making a separate call for each one.
+Clone it yourself (`gh repo clone org/repo ~/repos/repo`) —
+do not ask me to do it.
+
+### Investigation & Research
+
+Before answering questions about repo behavior, configs,
+or tool internals (renovate, pitchfork, mise, hk, launchd),
+investigate the actual source/config in the repo
+rather than answering from general knowledge.
+Empirically verify claims before stating them confidently.
