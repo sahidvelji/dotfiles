@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 #MISE description="Run mise doctor, showing only its warnings and problems"
-#MISE dir="~"
 set -uo pipefail
 
 out=$(mise doctor --json)
