@@ -13,8 +13,8 @@
   fill the template's sections concisely,
   explain *why*, not *what*,
   and don't restate the diff or the linked issue.
-  Keep it to about 10 lines
-  and skip "Review focus"-style sections
+  A reviewer should take it in at a glance:
+  skip "Review focus"-style sections
   unless the template requires them,
   and spell out acronyms.
   Never paste test output; say what is covered instead.
