@@ -79,14 +79,14 @@ url = "https://github.com/apple/pkl/releases/download/0.33.0/pkl-macos-aarch64"
 url_api = "https://api.github.com/repos/apple/pkl/releases/assets/714757040"
 
 [[tools.rumdl]]
-version = "v0.3.3"
+version = "v0.3.4"
 backend = "aqua:rvben/rumdl"
-specifiers = ["v0.3.3"]
+specifiers = ["v0.3.4"]
 
 [tools.rumdl."platforms.macos-arm64"]
-checksum = "sha256:8c60fbfc8064acda1e40856bfdbc7cc5f51a477920de1bae9426482d08916424"
-url = "https://github.com/rvben/rumdl/releases/download/v0.3.3/rumdl-v0.3.3-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/rvben/rumdl/releases/assets/733166609"
+checksum = "sha256:51f7bce0d56ea632ed65e7e42a99effb7ce7a23923fe0738ecda0e1d11bcb788"
+url = "https://github.com/rvben/rumdl/releases/download/v0.3.4/rumdl-v0.3.4-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/rvben/rumdl/releases/assets/741227518"
 provenance = "github-attestations"
 
 [[tools.shellcheck]]
