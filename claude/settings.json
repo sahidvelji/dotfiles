@@ -19,6 +19,7 @@
   "outputStyle": "Concise",
   "editorMode": "vim",
   "autoCompactEnabled": true,
+  "idleCompaction": false,
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
   "attribution": {
