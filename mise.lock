@@ -68,15 +68,15 @@ signer = "sigstore-oidc:https://github.com/jdx/jactionlint/.github/workflows/rel
 repository_ids = { repository = "1404951382" }
 
 [[tools.pkl]]
-version = "0.33.0"
+version = "0.33.1"
 backend = "aqua:apple/pkl"
-specifiers = ["0.33.0"]
+specifiers = ["0.33.1"]
 
 [tools.pkl."platforms.macos-arm64"]
-checksum = "sha256:e39c157df0f00a35d34b46270a768784edcaf509aafbf743849b27b4c83ef83b"
+checksum = "sha256:6f93ddf6524a5771bd4b6ebde11010c6dfee8e3a8906ffebaa8f52f8a0ba16b7"
 checksum_source = "mise-versions"
-url = "https://github.com/apple/pkl/releases/download/0.33.0/pkl-macos-aarch64"
-url_api = "https://api.github.com/repos/apple/pkl/releases/assets/714757040"
+url = "https://github.com/apple/pkl/releases/download/0.33.1/pkl-macos-aarch64"
+url_api = "https://api.github.com/repos/apple/pkl/releases/assets/764390310"
 
 [[tools.rumdl]]
 version = "v0.3.4"
