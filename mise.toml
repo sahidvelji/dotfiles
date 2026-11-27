@@ -3,7 +3,7 @@
 "aqua:owenlamont/ryl" = "0.30.0"
 betterleaks = "v1.10.1"
 biome = "2.6.2"
-hk = { version = "2.13.0", workflow = "release.yml" }
+hk = { version = "2.14.0", workflow = "release.yml" }
 jactionlint = { version = "v2.6.0", workflow = "release.yaml" }
 pkl = "0.33.1"
 rumdl = "v0.3.4"
